@@ -1,0 +1,12 @@
+{
+    "name": "f4cte/pc-builder",
+    "authors": [
+        {
+            "name": "facte sun",
+            "email": "shems.chelgoui@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/dotenv": "^6.2"
+    }
+}
