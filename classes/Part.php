@@ -1,18 +1,18 @@
 <?php
 class Part {
-    private String $name;
-    private String $imageLink;
-    private String $producer;
-    private String $mpn;
-    private Int $ean;
+    private string $name;
+    private string $imageLink;
+    private string $producer;
+    private string $mpn;
+    private int $ean;
     const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png";
 
     public function __construct(
-        String $name, 
-        String $imageLink = self::defaultImage , 
-        String $producer, 
-        String $mpn, 
-        Int $ean
+        string $name, 
+        string $imageLink = self::defaultImage , 
+        string $producer, 
+        string $mpn, 
+        int $ean
     ) {
         $this->name = $name;
         $this->imageLink = $imageLink;
@@ -21,23 +21,23 @@ class Part {
         $this->ean = $ean;
     }
     
-    public function getName(): String {
+    public function getName(): string {
         return $this->name;
     }
     
-    public function getImageLink(): String {
+    public function getImageLink(): string {
         return $this->imageLink;
     }
     
-    public function getProducer(): String {
+    public function getProducer(): string {
         return $this->producer;
     }
 
-    public function getMpn():String {
+    public function getMpn():string {
         return $this->mpn;
     }
     
-    public function getEan():String {
+    public function getEan():string {
         return $this->ean;
     }
 }

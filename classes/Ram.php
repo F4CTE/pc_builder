@@ -1,23 +1,21 @@
 <?php
 class Ram extends Part
 {
-    private String $type;
-    private Int $size;
-    private Int $clock;
-    private String $timings;
-    private Int $nbStick;
+    private string $type;
+    private int $size;
+    private int $clock;
+    private int $nbStick;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        String $type,
-        Int $size,
-        Int $clock,
-        String $timings,
-        Int $nbStick,
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
+        string $type,
+        int $size,
+        int $clock,
+        int $nbStick,
     ) {
         parent::__construct(
             $name,
@@ -30,33 +28,27 @@ class Ram extends Part
         $this->type = $type;
         $this->size = $size;
         $this->clock = $clock;
-        $this->timings = $timings;
         $this->nbStick = $nbStick;
     }
 
     
-    public function getNbStick(): Int
+    public function getNbStick(): int
     {
         return $this->nbStick;
     }
 
-    public function getTimings(): String
-    {
-        return $this->timings;
-    }
-
-    public function getClock(): Int
+    public function getClock(): int
     {
         return $this->clock;
     }
 
 
-    public function getSize(): Int
+    public function getSize(): int
     {
         return $this->size;
     }
 
-    public function getType(): String
+    public function getType(): string
     {
         return $this->type;
     }

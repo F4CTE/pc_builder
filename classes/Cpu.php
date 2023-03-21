@@ -1,25 +1,25 @@
 <?php
 class Cpu extends Part
 {
-    private Float $baseClock;
-    private Float $turboClock;
-    private Int $cores;
-    private Int $threads;
-    private String $socket;
-    private Int $tdp;
+    private float $baseClock;
+    private float $turboClock;
+    private int $cores;
+    private int $threads;
+    private string $socket;
+    private int $tdp;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        Float $baseClock,
-        Float $turboClock,
-        Int $cores,
-        Int $threads,
-        String $socket,
-        Int $tdp
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
+        float $baseClock,
+        float $turboClock,
+        int $cores,
+        int $threads,
+        string $socket,
+        int $tdp
     ) {
         parent::__construct(
             $name,
@@ -37,32 +37,32 @@ class Cpu extends Part
         $this->tdp = $tdp;
     }
 
-    public function getBaseClock(): Float
+    public function getBaseClock(): float
     {
         return $this->baseClock;
     }
 
-    public function getTurboClock(): Float
+    public function getTurboClock(): float
     {
         return $this->turboClock;
     }
 
-    public function getCores(): Int
+    public function getCores(): int
     {
         return $this->cores;
     }
 
-    public function getThreads(): Int
+    public function getThreads(): int
     {
         return $this->threads;
     }
 
-    public function getSocket(): String
+    public function getSocket(): string
     {
         return $this->socket;
     }
 
-    public function getTdp(): Int
+    public function getTdp(): int
     {
         return $this->tdp;
     }

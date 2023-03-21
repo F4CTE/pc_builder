@@ -1,23 +1,19 @@
 <?php
 class Psu extends Part
 {
-    private Int $power;
-    private String $format;
-    private String $efficiency;
-    private Int $sixPin;
-    private Int $eightPin;
+    private int $power;
+    private string $format;
+    private array $connectics;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        Int $power,
-        String $format,
-        String $efficiency,
-        Int $sixPin = 0,
-        Int $eightPin = 0
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
+        int $power,
+        string $format,
+        array $connectics,
     ) {
         parent::__construct(
             $name,
@@ -29,32 +25,30 @@ class Psu extends Part
 
         $this->power = $power;
         $this->format = $format;
-        $this->efficiency = $efficiency;
-        $this->sixPin = $sixPin;
-        $this->eightPin = $eightPin;
+        $this->connectics = $connectics;
     }
 
-    public function getEightPin(): Int
+    public function getConnectics(): array
     {
-        return $this->eightPin;
+        return $this->connectics;
     }
 
-    public function getSixPin(): Int
+    public function getEightPin(): int
     {
-        return $this->sixPin;
+        return $this->connectics['eightPin'];
     }
 
-    public function getEfficiency(): String
+    public function getSixPin(): int
     {
-        return $this->efficiency;
+        return $this->connectics['sixPin'];
     }
 
-    public function getFormat(): String
+    public function getFormat(): string
     {
         return $this->format;
     }
 
-    public function getPower(): Int
+    public function getPower(): int
     {
         return $this->power;
     }

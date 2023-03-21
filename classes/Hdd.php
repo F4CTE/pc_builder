@@ -1,17 +1,17 @@
 <?php
 class Hdd extends Part
 {
-    private Int $size;
-    private Int $rpm;
+    private int $size;
+    private int $rpm;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        Int $size,
-        Int $rpm
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
+        int $size,
+        int $rpm
     ) {
         parent::__construct(
             $name,
@@ -25,12 +25,12 @@ class Hdd extends Part
         $this->rpm = $rpm;
     }
 
-    public function getRpm(): Int
+    public function getRpm(): int
     {
         return $this->rpm;
     }
 
-    public function getSize(): Int
+    public function getSize(): int
     {
         return $this->size;
     }

@@ -1,172 +1,111 @@
 <?php
-class Mb extends Part {
-    private String $socket;
-    private String $chipset;
-    private String $form;
-    private String $memoryType;
-    private Int $memoryCapacity;
-    private Int $sata;
-    private Int $m2Pcie3;
-    private Int $m2Pcie4;
-    private Int $usb3Slots;
-    private Int $usbC;
-    private Int $usb3Headers;
-    private Int $vga;
-    private Int $dvi;
-    private Int $displayPort;
-    private Int $hdmi;
-    private Int $pcie3X1;
-    private Int $pcie3X16;
-    private Int $pcie4X1;
-    private Int $pcie4X16;
+class Mb extends Part
+{
+        private string $socket;
+        private string $chipset;
+        private string $form;
+        private string $memoryType;
+        private int $memoryCapacity;
+        private array $ports = [
+                'sata'=>'', 
+                'm2Pcie3'=>'', 
+                'm2Pcie4'=>'', 
+                'pcie3X1'=>'', 
+                'pcie3X16'=>'', 
+                'pcie4X1'=>'', 
+                'pcie4X16'=>'',
+        ];
 
-    public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        String $socket,
-        String $chipset,
-        String $form,
-        String $memoryType,
-        Int $memoryCapacity,
-        Int $sata,
-        Int $m2Pcie3,
-        Int $m2Pcie4,
-        Int $usb3Slots,
-        Int $usbC,
-        Int $usb3Headers,
-        Int $vga,
-        Int $dvi,
-        Int $displayPort,
-        Int $hdmi,
-        Int $pcie3X1,
-        Int $pcie3X16,
-        Int $pcie4X1,
-        Int $pcie4X16,
-    ) {
-        parent::__construct(
-            $name,
-            $imageLink,
-            $producer,
-            $mpn,
-            $ean
-        );
-        
-        $this->socket = $socket;
-        $this->chipset = $chipset;
-        $this->form  = $form;
-        $this->memoryType =  $memoryType;
-        $this->memoryCapacity = $memoryCapacity;
-        $this->sata = $sata;
-        $this->m2Pcie3 = $m2Pcie3;
-        $this->m2Pcie4 = $m2Pcie4;
-        $this->usb3Slots = $usb3Slots;
-        $this->usbC =  $usbC;
-        $this->usb3Headers = $usb3Headers;
-        $this->vga = $vga;
-        $this->dvi = $dvi;
-        $this->displayPort = $displayPort;
-        $this->hdmi = $hdmi;
-        $this->pcie3X1 = $pcie3X1;
-        $this->pcie3X16 = $pcie3X16;
-        $this->pcie4X1 = $pcie4X1;
-        $this->pcie4X16 = $pcie4X16;
-    }
+        public function __construct(
+                string $name,
+                string $imageLink,
+                string $producer,
+                string $mpn,
+                int $ean,
+                string $socket,
+                string $chipset,
+                string $form,
+                string $memoryType,
+                int $memoryCapacity,
+                array $ports,
+        ) {
+                parent::__construct(
+                        $name,
+                        $imageLink,
+                        $producer,
+                        $mpn,
+                        $ean
+                );
 
-        public function getPcie4X16(): Int
-        {
-                return $this->pcie4X16;
+                $this->socket = $socket;
+                $this->chipset = $chipset;
+                $this->form  = $form;
+                $this->memoryType =  $memoryType;
+                $this->memoryCapacity = $memoryCapacity;
+                $this->ports = $ports;
         }
 
-        public function getPcie4X1(): Int
+        public function getPorts(): array
         {
-                return $this->pcie4X1;
+                return $this->ports;
         }
 
-
-        public function getPcie3X16(): Int
+        public function getPcie4X16(): int
         {
-                return $this->pcie3X16;
+                return $this->ports['pcie4X16'];
         }
 
-        public function getPcie3X1(): Int
+        public function getPcie4X1(): int
         {
-                return $this->pcie3X1;
+                return $this->ports['pcie4X1'];
         }
 
-        public function getHdmi(): Int
+        public function getPcie3X16(): int
         {
-                return $this->hdmi;
+                return $this->ports['pcie3X16'];
         }
 
-        public function getDisplayPort(): Int
+        public function getPcie3X1(): int
         {
-                return $this->displayPort;
+                return $this->ports['pcie3X1'];
         }
 
-        public function getDvi(): Int
+        public function getM2Pcie4(): int
         {
-                return $this->dvi;
+                return $this->ports['m2Pcie4'];
         }
 
-        public function getVga(): Int
+        public function getM2Pcie3(): int
         {
-                return $this->vga;
+                return $this->ports['m2Pcie3'];
         }
 
-        public function getUsb3Headers(): Int
+        public function getSata(): int
         {
-                return $this->usb3Headers;
+                return $this->ports['sata'];
         }
 
-        public function getUsbC(): Int
-        {
-                return $this->usbC;
-        }
-
-        public function getUsb3Slots(): Int
-        {
-                return $this->usb3Slots;
-        }
-
-        public function getM2Pcie4(): Int
-        {
-                return $this->m2Pcie4;
-        }
-
-        public function getM2Pcie3(): Int
-        {
-                return $this->m2Pcie3;
-        }
-
-        public function getSata(): Int
-        {
-                return $this->sata;
-        }
-
-        public function getMemoryCapacity(): Int
+        public function getMemoryCapacity(): int
         {
                 return $this->memoryCapacity;
         }
 
-        public function getMemoryType(): String
+        public function getMemoryType(): string
         {
                 return $this->memoryType;
         }
 
-        public function getForm(): String
+        public function getForm(): string
         {
                 return $this->form;
         }
 
-        public function getChipset(): String
+        public function getChipset(): string
         {
                 return $this->chipset;
         }
 
-        public function getSocket(): String
+        public function getSocket(): string
         {
                 return $this->socket;
         }

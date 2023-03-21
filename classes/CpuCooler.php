@@ -1,21 +1,19 @@
 <?php
 class CpuCooler extends Part
 {
-    private $sockets;
-    private $height;
-    private $tdp;
-    private $fans;
+    private array $sockets;
+    private int $height;
+    private int $tdp;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
         array $sockets,
-        Int $height,
-        Int $tdp,
-        array $fans,
+        int $height,
+        int $tdp,
     ) {
         parent::__construct(
             $name,
@@ -28,17 +26,11 @@ class CpuCooler extends Part
         $this->sockets = $sockets;
         $this->height = $height;
         $this->tdp = $tdp;
-        $this->fans = $fans;
     }
 
     public function getSockets(): array
     {
         return $this->sockets;
-    }
-
-    public function getFans(): array
-    {
-        return $this->fans;
     }
 
     public function getTdp(): int

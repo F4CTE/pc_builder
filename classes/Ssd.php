@@ -1,22 +1,22 @@
 <?php
 class Ssd extends part {
-    private String $form;
-    private String $protocol;
-    private Int $size;
-    private String $nand;
-    private String $controller;
+    private string $form;
+    private string $protocol;
+    private int $storage;
+    private string $nand;
+    private string $controller;
 
     public function __construct(
-        String $name,
-        String $imageLink,
-        String $producer,
-        String $mpn,
-        Int $ean,
-        String $form,
-        String $protocol,
-        Int $size,
-        String $nand,
-        String $controller,
+        string $name,
+        string $imageLink,
+        string $producer,
+        string $mpn,
+        int $ean,
+        string $form,
+        string $protocol,
+        int $storage,
+        string $nand,
+        string $controller,
     ) {
     parent::__construct(
         $name,
@@ -28,33 +28,33 @@ class Ssd extends part {
 
     $this->form = $form;
     $this->protocol = $protocol;
-    $this->size = $size;
+    $this->storage = $storage;
     $this->nand = $nand;
     $this->controller = $controller;
 
     }
 
-    public function getForm(): String
+    public function getForm(): string
     {
         return $this->form;
     }
 
-    public function getProtocol(): String
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
 
-    public function getSize(): Int
+    public function getSize(): int
     {
-        return $this->size;
+        return $this->storage;
     }
 
-    public function getNand(): String
+    public function getNand(): string
     {
         return $this->nand;
     }
 
-    public function getController(): String
+    public function getController(): string
     {
         return $this->controller;
     }
