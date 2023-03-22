@@ -1,4 +1,8 @@
 <?php
+session_start();
+var_dump($_SESSION);
+
+
 require_once __DIR__ . '/Part.php';
 
 class Cpu extends Part {
@@ -12,8 +16,8 @@ class Cpu extends Part {
     public function __construct(
         string $name,
         string $producer,
-        int $baseClock,
-        int $turboClock,
+        float $baseClock,
+        float $turboClock,
         int $cores,
         int $threads,
         string $socket,

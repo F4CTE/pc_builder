@@ -3,8 +3,8 @@ class Ssd extends part {
     private string $form;
     private string $protocol;
     private int $storage;
-    private string $nand;
-    private string $controller;
+    private ?string $nand;
+    private ?string $controller;
 
     public function __construct(
         string $name,
@@ -12,8 +12,8 @@ class Ssd extends part {
         string $form,
         string $protocol,
         int $storage,
-        string $nand,
-        string $controller,
+        ?string $controller = null,
+        ?string $nand = null,
         ?string $mpn = null,
         ?int $ean = null,
         ?string $imageLink = parent::defaultImage,
@@ -29,10 +29,10 @@ class Ssd extends part {
     );
 
     $this->form = $form;
-    $this->protocol = $protocol;
+    $this->protocol = $protocol ?? null;
     $this->storage = $storage;
-    $this->nand = $nand;
-    $this->controller = $controller;
+    $this->nand = $nand ?? null;
+    $this->controller = $controller ?? null;
 
     }
 

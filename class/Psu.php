@@ -2,15 +2,15 @@
 class Psu extends Part
 {
     private int $power;
-    private string $format;
+    private ?string $format;
     private array $connectics;
 
     public function __construct(
         string $name,
         string $producer,
         int $power,
-        string $format,
         array $connectics,
+        ?string $format = null,
         ?string $mpn = null,
         ?int $ean = null,
         ?string $imageLink = parent::defaultImage,
@@ -26,7 +26,7 @@ class Psu extends Part
         );
 
         $this->power = $power;
-        $this->format = $format;
+        $this->format = $format ?? null;
         $this->connectics = $connectics;
     }
 
@@ -37,12 +37,12 @@ class Psu extends Part
 
     public function getEightPin(): int
     {
-        return $this->connectics['eightPin'];
+        return $this->connectics['pin_8'];
     }
 
     public function getSixPin(): int
     {
-        return $this->connectics['sixPin'];
+        return $this->connectics['pin_6'];
     }
 
     public function getFormat(): string

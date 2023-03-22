@@ -5,7 +5,7 @@ class Mb extends Part
         private string $chipset;
         private string $form;
         private string $memoryType;
-        private int $memoryCapacity;
+        private ?int $memoryCapacity;
         private array $ports = [
                 'ram'=>'',
                 'sata'=>'', 
@@ -24,8 +24,8 @@ class Mb extends Part
                 string $chipset,
                 string $form,
                 string $memoryType,
-                int $memoryCapacity,
                 array $ports,
+                ?int $memoryCapacity = null,
                 ?string $mpn = null,
                 ?int $ean = null,
                 ?string $imageLink = parent::defaultImage,
@@ -44,7 +44,7 @@ class Mb extends Part
                 $this->chipset = $chipset;
                 $this->form  = $form;
                 $this->memoryType =  $memoryType;
-                $this->memoryCapacity = $memoryCapacity;
+                $this->memoryCapacity = $memoryCapacity ?? null;
                 $this->ports = $ports;
         }
 

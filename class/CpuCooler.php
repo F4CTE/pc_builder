@@ -2,7 +2,6 @@
 class CpuCooler extends Part {
     private array $sockets;
     private int $height;
-    private int $tdp;
 
     public function __construct(
         string $name,
@@ -30,11 +29,6 @@ class CpuCooler extends Part {
     public function getSockets(): array
     {
         return $this->sockets;
-    }
-
-    public function getTdp(): int
-    {
-        return $this->tdp;
     }
 
     public function getHeight(): int
