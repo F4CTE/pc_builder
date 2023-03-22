@@ -1,6 +1,7 @@
 <?php
-class Cpu extends Part
-{
+require_once __DIR__ . '/Part.php';
+
+class Cpu extends Part {
     private float $baseClock;
     private float $turboClock;
     private int $cores;
@@ -10,23 +11,25 @@ class Cpu extends Part
 
     public function __construct(
         string $name,
-        string $imageLink,
         string $producer,
-        string $mpn,
-        int $ean,
-        float $baseClock,
-        float $turboClock,
+        int $baseClock,
+        int $turboClock,
         int $cores,
         int $threads,
         string $socket,
-        int $tdp
+        ?int $tdp = null,
+        ?string $mpn = null,
+        ?string $ean = null,
+        ?string $imageLink = parent::defaultImage,
+        ?int $id = NULL,
     ) {
         parent::__construct(
             $name,
-            $imageLink,
             $producer,
-            $mpn,
-            $ean
+            $mpn ?? null,
+            $ean ?? null,
+            $imageLink ?? parent::defaultImage,
+            $id ?? NULL,
         );
 
         $this->baseClock = $baseClock;

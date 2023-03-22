@@ -7,21 +7,23 @@ class Chassis extends part {
 
     public function __construct(
         string $name,
-        string $imageLink,
         string $producer,
-        string $mpn,
-        int $ean,
         string$MbFormat,
         string $psuFormat,
         int $maxGpuSize,
         int $MaxCpuCoolerHeight,
+        ?string $mpn = null,
+        ?int $ean = null,
+        ?string $imageLink = parent::defaultImage,
+        ?int $id = null,
     ) {
         parent::__construct(
             $name,
-            $imageLink,
             $producer,
-            $mpn,
-            $ean
+            $mpn ?? null,
+            $ean ?? null,
+            $imageLink ?? parent::defaultImage,
+            $id ?? null,
         );
 
         $this->MbFormat = $MbFormat;

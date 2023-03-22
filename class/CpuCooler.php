@@ -1,31 +1,30 @@
 <?php
-class CpuCooler extends Part
-{
+class CpuCooler extends Part {
     private array $sockets;
     private int $height;
     private int $tdp;
 
     public function __construct(
         string $name,
-        string $imageLink,
         string $producer,
-        string $mpn,
-        int $ean,
-        array $sockets,
         int $height,
-        int $tdp,
+        array $sockets,
+        ?string $mpn = null,
+        ?int $ean = null,
+        ?string $imageLink = parent::defaultImage,
+        ?int $id = null,
     ) {
         parent::__construct(
             $name,
-            $imageLink,
             $producer,
-            $mpn,
-            $ean
+            $mpn ?? null,
+            $ean ?? null,
+            $imageLink ?? parent::defaultImage,
+            $id ?? null,
         );
 
         $this->sockets = $sockets;
         $this->height = $height;
-        $this->tdp = $tdp;
     }
 
     public function getSockets(): array

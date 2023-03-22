@@ -9,8 +9,14 @@
     "scripts": {
         "start": "php -S localhost:8000 -t public"
     },
+    "autoload": {
+        "psr-4": {
+            "class\\": "class/"
+        }
+    },
     "config": {
-        "process-timeout": 0},
+        "process-timeout": 0
+    },
     "require": {
         "symfony/dotenv": "^6.2"
     }

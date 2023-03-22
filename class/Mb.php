@@ -7,6 +7,7 @@ class Mb extends Part
         private string $memoryType;
         private int $memoryCapacity;
         private array $ports = [
+                'ram'=>'',
                 'sata'=>'', 
                 'm2Pcie3'=>'', 
                 'm2Pcie4'=>'', 
@@ -18,23 +19,25 @@ class Mb extends Part
 
         public function __construct(
                 string $name,
-                string $imageLink,
                 string $producer,
-                string $mpn,
-                int $ean,
                 string $socket,
                 string $chipset,
                 string $form,
                 string $memoryType,
                 int $memoryCapacity,
                 array $ports,
+                ?string $mpn = null,
+                ?int $ean = null,
+                ?string $imageLink = parent::defaultImage,
+                ?int $id = NULL,
         ) {
                 parent::__construct(
                         $name,
-                        $imageLink,
                         $producer,
-                        $mpn,
-                        $ean
+                        $mpn ?? null,
+                        $ean ?? null,
+                        $imageLink ?? parent::defaultImage,
+                        $id ?? null,
                 );
 
                 $this->socket = $socket;
@@ -85,6 +88,11 @@ class Mb extends Part
                 return $this->ports['sata'];
         }
 
+        public function getRam(): int
+        {
+                return $this->ports['ram'];
+        }
+        
         public function getMemoryCapacity(): int
         {
                 return $this->memoryCapacity;

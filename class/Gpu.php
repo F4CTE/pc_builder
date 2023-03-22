@@ -10,24 +10,26 @@ class Gpu extends Part
 
     public function __construct(
         string $name,
-        string $imageLink,
         string $producer,
-        string $mpn,
-        int $ean,
         int $boostClock,
         int $vram,
         int $memoryClock,
         int $length,
         array $powerSupply,
-        int $tdp
+        ?int $tdp = null,
+        ?string $mpn = null,
+        ?int $ean = null,
+        ?string $imageLink = parent::defaultImage,
+        ?int $id = null,
     ) {
 
         parent::__construct(
             $name,
-            $imageLink,
             $producer,
-            $mpn,
-            $ean
+            $mpn ?? null,
+            $ean ?? null,
+            $imageLink ?? parent::defaultImage,
+            $id ?? null,
         );
 
         $this->boostClock = $boostClock;

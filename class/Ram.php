@@ -2,31 +2,33 @@
 class Ram extends Part
 {
     private string $type;
-    private int $size;
+    private int $capacity;
     private int $clock;
     private int $nbStick;
 
     public function __construct(
         string $name,
-        string $imageLink,
         string $producer,
-        string $mpn,
-        int $ean,
         string $type,
-        int $size,
+        int $capacity,
         int $clock,
         int $nbStick,
+        ?string $mpn = null,
+        ?int $ean = null,
+        ?string $imageLink = parent::defaultImage,
+        ?int $id = null,
     ) {
         parent::__construct(
             $name,
-            $imageLink,
             $producer,
-            $mpn,
-            $ean
+            $mpn ?? null,
+            $ean ?? null,
+            $imageLink ?? parent::defaultImage,
+            $id ?? null,
         );
 
         $this->type = $type;
-        $this->size = $size;
+        $this->capacity = $capacity;
         $this->clock = $clock;
         $this->nbStick = $nbStick;
     }
@@ -45,7 +47,7 @@ class Ram extends Part
 
     public function getSize(): int
     {
-        return $this->size;
+        return $this->capacity;
     }
 
     public function getType(): string
