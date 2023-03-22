@@ -23,7 +23,6 @@ foreach($file as $element) {
         $element['cpu_image_link'] ?? Part::defaultImage,
         null,
     );
-    var_dump($cpu);
 }
 
 require_once __DIR__ . '/class/Chassis.php';
@@ -184,3 +183,7 @@ foreach($file as $element) {
         null
     );
 }
+
+require_once __DIR__ . '/class/ObjectToDb.php';
+$pdo = new ObjectToDb();
+var_dump($pdo->getUserById(1));

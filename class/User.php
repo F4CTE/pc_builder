@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/DbItem.php';
 class user extends DbItem{
-    private int $id;
     private string $username;
     private string $email;
     private string $password;
@@ -19,11 +18,6 @@ class user extends DbItem{
         $this->email = $email;
         $this->password = $password;
         $this->admin = $admin ?? false;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function getUsername(): string

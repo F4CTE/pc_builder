@@ -11,7 +11,7 @@ class Cpu extends Part {
     private int $cores;
     private int $threads;
     private string $socket;
-    private int $tdp;
+    private ?int $tdp;
 
     public function __construct(
         string $name,
@@ -25,7 +25,7 @@ class Cpu extends Part {
         ?string $mpn = null,
         ?string $ean = null,
         ?string $imageLink = parent::defaultImage,
-        ?int $id = NULL,
+        ?int $id = null,
     ) {
         parent::__construct(
             $name,
