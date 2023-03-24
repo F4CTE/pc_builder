@@ -1,5 +1,7 @@
 <?php
-class Ssd extends part {
+namespace App;
+class Ssd extends Part
+{
     private string $form;
     private string $protocol;
     private int $storage;
@@ -19,21 +21,40 @@ class Ssd extends part {
         ?string $imageLink = parent::defaultImage,
         ?int $id = null,
     ) {
-    parent::__construct(
-        $name,
-        $producer,
-        $mpn ?? null,
-        $ean ?? null,
-        $imageLink ?? parent::defaultImage,
-        $id ?? null,
-    );
+        parent::__construct(
+            $name,
+            $producer,
+            $mpn,
+            $ean,
+            $imageLink ?? parent::defaultImage,
+            $id,
+        );
 
-    $this->form = $form;
-    $this->protocol = $protocol ?? null;
-    $this->storage = $storage;
-    $this->nand = $nand ?? null;
-    $this->controller = $controller ?? null;
+        $this->form = $form;
+        $this->protocol = $protocol;
+        $this->storage = $storage;
+        $this->nand = $nand;
+        $this->controller = $controller;
+    }
 
+    final protected function createPdo(): void
+    {
+        $this->pdo = new SsdPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
     }
 
     public function getForm(): string

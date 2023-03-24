@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class Psu extends Part
 {
     private int $power;
@@ -19,15 +20,35 @@ class Psu extends Part
         parent::__construct(
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
+            $mpn,
+            $ean,
             $imageLink ?? parent::defaultImage,
-            $id ?? null,
+            $id,
         );
 
         $this->power = $power;
-        $this->format = $format ?? null;
+        $this->format = $format;
         $this->connectics = $connectics;
+    }
+
+    protected function createPdo(): void
+    {
+        $this->pdo = new PsuPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
     }
 
     public function getConnectics(): array

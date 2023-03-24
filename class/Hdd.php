@@ -1,4 +1,7 @@
 <?php
+
+namespace App;
+
 class Hdd extends Part
 {
     private int $size;
@@ -15,17 +18,37 @@ class Hdd extends Part
         ?int $id = null,
     ) {
         parent::__construct(
-            
+
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
+            $mpn,
+            $ean,
             $imageLink ?? parent::defaultImage,
-            $id ?? null,
+            $id,
         );
 
         $this->size = $size;
         $this->rpm = $rpm;
+    }
+
+    protected function createPdo(): void
+    {
+        $this->pdo = new HddPdo();
+    }
+
+    protected function insert(): int
+    {
+        return (new HddPdo())->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return (new HddPdo())->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return (new HddPdo())->delete($this);
     }
 
     public function getRpm(): int

@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class Gpu extends Part
 {
     private int $boostClock;
@@ -26,10 +27,10 @@ class Gpu extends Part
         parent::__construct(
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
+            $mpn,
+            $ean,
             $imageLink ?? parent::defaultImage,
-            $id ?? null,
+            $id,
         );
 
         $this->boostClock = $boostClock;
@@ -38,6 +39,26 @@ class Gpu extends Part
         $this->length = $length;
         $this->powerSupply = $powerSupply;
         $this->tdp = $tdp;
+    }
+
+    protected function createPdo(): void
+    {
+        $this->pdo = new GpuPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
     }
 
     public function getTdp(): int

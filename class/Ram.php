@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class Ram extends Part
 {
     private string $type;
@@ -21,10 +22,10 @@ class Ram extends Part
         parent::__construct(
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
+            $mpn,
+            $ean,
             $imageLink ?? parent::defaultImage,
-            $id ?? null,
+            $id,
         );
 
         $this->type = $type;
@@ -33,7 +34,26 @@ class Ram extends Part
         $this->nbStick = $nbStick;
     }
 
-    
+    protected function createPdo(): void
+    {
+        $this->pdo = new RamPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
+    }
+
     public function getNbStick(): int
     {
         return $this->nbStick;

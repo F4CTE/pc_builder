@@ -1,10 +1,5 @@
 <?php
-session_start();
-var_dump($_SESSION);
-
-
-require_once __DIR__ . '/Part.php';
-
+namespace App;
 class Cpu extends Part {
     private float $baseClock;
     private float $turboClock;
@@ -30,10 +25,10 @@ class Cpu extends Part {
         parent::__construct(
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
-            $imageLink ?? parent::defaultImage,
-            $id ?? NULL,
+            $mpn,
+            $ean,
+            $imageLink,
+            $id,
         );
 
         $this->baseClock = $baseClock;
@@ -42,6 +37,26 @@ class Cpu extends Part {
         $this->threads = $threads;
         $this->socket = $socket;
         $this->tdp = $tdp;
+    }
+
+    protected function createPdo(): void
+    {
+        $this->pdo = new CpuPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
     }
 
     public function getBaseClock(): float

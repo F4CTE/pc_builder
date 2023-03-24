@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/DbItem.php';
-class Part extends DbItem{
-    private string $name;
-    private string $imageLink;
-    private string $producer;
-    private ?string $mpn;
-    private ?int $ean;
+namespace App;
+abstract class Part extends DbItem{
+    protected string $name;
+    protected string $imageLink;
+    protected string $producer;
+    protected ?string $mpn;
+    protected ?int $ean;
     const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png";
 
     public function __construct(
@@ -16,31 +16,31 @@ class Part extends DbItem{
         ?string $imageLink = self::defaultImage,
         ?int $id = null,
     ) {
-        parent::__construct($id ?? null);
+        parent::__construct($id);
         $this->name = $name;
         $this->producer = $producer;
-        $this->mpn = $mpn ?? null;
-        $this->ean = $ean ?? null;
+        $this->mpn = $mpn;
+        $this->ean = $ean;
         $this->imageLink = $imageLink ?? self::defaultImage;
     }
     
-    public function getName(): string {
+    final public function getName(): string {
         return $this->name;
     }
     
-    public function getImageLink(): string {
+    final public function getImageLink(): string {
         return $this->imageLink;
     }
     
-    public function getProducer(): string {
+    final public function getProducer(): string {
         return $this->producer;
     }
 
-    public function getMpn():string {
+    final public function getMpn():string {
         return $this->mpn;
     }
     
-    public function getEan():string {
+    final public function getEan():string {
         return $this->ean;
     }
 }

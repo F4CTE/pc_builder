@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class build extends DbItem{
     private int $userId;
     private string $name;
@@ -26,6 +27,26 @@ class build extends DbItem{
         $this->parts = $parts;
     }
 
+    protected function createPdo(): void
+    {
+        $this->pdo = new BuildPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
+    }
+
     public function getUserId(): int
     {
         return $this->userId;
@@ -40,4 +61,5 @@ class build extends DbItem{
     {
         return $this->parts;
     }
+
 }

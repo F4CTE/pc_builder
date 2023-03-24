@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class Mb extends Part
 {
         private string $socket;
@@ -7,14 +8,14 @@ class Mb extends Part
         private string $memoryType;
         private ?int $memoryCapacity;
         private array $ports = [
-                'ram'=>'',
-                'sata'=>'', 
-                'm2Pcie3'=>'', 
-                'm2Pcie4'=>'', 
-                'pcie3X1'=>'', 
-                'pcie3X16'=>'', 
-                'pcie4X1'=>'', 
-                'pcie4X16'=>'',
+                'ram' => '',
+                'sata' => '',
+                'm2Pcie3' => '',
+                'm2Pcie4' => '',
+                'pcie3X1' => '',
+                'pcie3X16' => '',
+                'pcie4X1' => '',
+                'pcie4X16' => '',
         ];
 
         public function __construct(
@@ -29,23 +30,43 @@ class Mb extends Part
                 ?string $mpn = null,
                 ?int $ean = null,
                 ?string $imageLink = parent::defaultImage,
-                ?int $id = NULL,
+                ?int $id = null,
         ) {
                 parent::__construct(
                         $name,
                         $producer,
-                        $mpn ?? null,
-                        $ean ?? null,
+                        $mpn,
+                        $ean,
                         $imageLink ?? parent::defaultImage,
-                        $id ?? null,
+                        $id,
                 );
 
                 $this->socket = $socket;
                 $this->chipset = $chipset;
                 $this->form  = $form;
                 $this->memoryType =  $memoryType;
-                $this->memoryCapacity = $memoryCapacity ?? null;
+                $this->memoryCapacity = $memoryCapacity;
                 $this->ports = $ports;
+        }
+
+        protected function createPdo(): void
+        {
+                $this->pdo = new MbPdo();
+        }
+
+        protected function insert(): int
+        {
+                return $this->pdo->create($this);
+        }
+
+        protected function update(): bool
+        {
+                return $this->pdo->update($this);
+        }
+
+        protected function delete(): bool
+        {
+                return $this->pdo->delete($this);
         }
 
         public function getPorts(): array
@@ -92,7 +113,7 @@ class Mb extends Part
         {
                 return $this->ports['ram'];
         }
-        
+
         public function getMemoryCapacity(): int
         {
                 return $this->memoryCapacity;

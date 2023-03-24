@@ -1,4 +1,5 @@
 <?php
+namespace App;
 class Chassis extends part {
     private string $MbFormat;
     private string $psuFormat;
@@ -20,16 +21,35 @@ class Chassis extends part {
         parent::__construct(
             $name,
             $producer,
-            $mpn ?? null,
-            $ean ?? null,
-            $imageLink ?? parent::defaultImage,
-            $id ?? null,
+            $mpn,
+            $ean,
+            $imageLink,
+            $id,
         );
 
         $this->MbFormat = $MbFormat;
         $this->psuFormat = $psuFormat;
         $this->maxGpuSize = $maxGpuSize;
         $this->MaxCpuCoolerHeight = $MaxCpuCoolerHeight;
+    }
+
+    protected function createPdo() : void{
+        $this->pdo = new ChassisPdo();
+    }
+
+    protected function insert(): int
+    {
+        return $this->pdo->create($this);
+    }
+
+    protected function update(): bool
+    {
+        return $this->pdo->update($this);
+    }
+
+    protected function delete(): bool
+    {
+        return $this->pdo->delete($this);
     }
 
     public function getMbFormat(): string
