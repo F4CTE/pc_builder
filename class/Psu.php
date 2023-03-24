@@ -66,7 +66,7 @@ class Psu extends Part
         return $this->connectics['pin_6'];
     }
 
-    public function getFormat(): string
+    public function getFormat(): ?string
     {
         return $this->format;
     }

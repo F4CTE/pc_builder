@@ -2,6 +2,25 @@
 namespace App;
 class RamPdo extends PdoDb {
 
+    public function createDbItem(array $arrayItem): ?ram
+    {
+        $ram = new Ram(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            $arrayItem['RAM_TYPE'],
+            intval($arrayItem['size']),
+            $arrayItem['clock'],
+            $arrayItem['sticks'],
+            $arrayItem['MPN'],
+            $arrayItem['EAN'],
+            $arrayItem['image_url'] ?? Part::defaultImage,
+            null
+        );
+        
+        $ram->save();
+        return $ram;
+    }
+
     public function getAll(): array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM rams");
@@ -12,9 +31,10 @@ class RamPdo extends PdoDb {
             $rams[] = new Ram(
                 $row['name'],
                 $row['producer'],
-                $row['power'],
-                $row['connectics'],
-                $row['format'],
+                $row['Type'],
+                $row['capacity'],
+                $row['clock'],
+                $row['sticks'],
                 $row['mpn'],
                 $row['ean'],
                 $row['imageLink'],
@@ -34,9 +54,10 @@ class RamPdo extends PdoDb {
         return new Ram(
             $row['name'],
             $row['producer'],
-            $row['power'],
-            $row['connectics'],
-            $row['format'],
+            $row['Type'],
+            $row['capacity'],
+            $row['clock'],
+            $row['sticks'],
             $row['mpn'],
             $row['ean'],
             $row['imageLink'],
@@ -46,34 +67,34 @@ class RamPdo extends PdoDb {
 
     public function create($ram): ?int
     {
-        $stmt = $this->pdo->prepare("INSERT INTO ram (name,producer,ram_type,size,clock,sticks,mpn,ean,image_url) VALUES (:name,:producer,:ram_type,:size,:clock,:sticks,:mpn,:ean,:image_url);");
+        $stmt = $this->pdo->prepare("INSERT INTO rams (name,producer,Type,capacity,clock,sticks,mpn,ean,imageLink) VALUES (:name,:producer,:Type,:capacity,:clock,:sticks,:mpn,:ean,:imageLink);");
         $stmt->execute([
             ':name' => $ram->getName(),
             ':producer' => $ram->getProducer(),
-            ':ram_type' => $ram->getRamType(),
-            ':size' => $ram->getSize(),
+            ':Type' => $ram->getType(),
+            ':capacity' => $ram->getSize(),
             ':clock' => $ram->getClock(),
             ':sticks' => $ram->getSticks(),
             ':mpn' => $ram->getMpn(),
             ':ean' => $ram->getEan(),
-            ':image_url' => $ram->getImageLink()
+            ':imageLink' => $ram->getImageLink()
         ]);
         return $this->pdo->lastInsertId();
     }
 
     public function update($ram): bool
     {
-        $stmt = $this->pdo->prepare("UPDATE ram SET name = :name, producer = :producer, ram_type = :ram_type, size = :size, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, image_url = :image_url WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE rams SET name = :name, producer = :producer, Type = :Type, capacity = :capacity, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id");
         $stmt->execute([
             ':name' => $ram->getName(),
             ':producer' => $ram->getProducer(),
-            ':ram_type' => $ram->getRamType(),
-            ':size' => $ram->getSize(),
+            ':Type' => $ram->getType(),
+            ':capacity' => $ram->getSize(),
             ':clock' => $ram->getClock(),
             ':sticks' => $ram->getSticks(),
             ':mpn' => $ram->getMpn(),
             ':ean' => $ram->getEan(),
-            ':image_url' => $ram->getImageLink(),
+            ':imageLink' => $ram->getImageLink(),
             ':id' => $ram->getId()
         ]);
         return $stmt->rowCount() > 0;
@@ -81,10 +102,17 @@ class RamPdo extends PdoDb {
 
     public function delete($ram): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM ram WHERE id = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM rams WHERE id = :id");
         $stmt->execute([
             ':id' => $ram->getId()
         ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM rams");
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

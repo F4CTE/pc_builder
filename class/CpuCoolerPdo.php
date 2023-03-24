@@ -3,6 +3,22 @@ namespace App;
 
 class CpuCoolerPdo extends PdoDb {
 
+    protected function createDbItem(array $arrayItem): CpuCooler
+    {
+        $cpuCooler = new CpuCooler(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            intval($arrayItem['Height']),
+            explode(', ', $arrayItem['sockets']),
+            $arrayItem['mpn'] ?? null,
+            $arrayItem['ean'] ?? null,
+            $arrayItem['image_url'] ?? null,
+            null
+        );
+        $cpuCooler->save();
+        return $cpuCooler;
+    }
+
     public function getAll(): array {
         $query = "SELECT * FROM cpu_cooler";
         $stmt = $this->pdo->prepare($query);
@@ -25,7 +41,7 @@ class CpuCoolerPdo extends PdoDb {
 
     }
 
-    public function getById(int $id): ?object
+    public function getById(int $id): ?CpuCooler
     {
         $query = "SELECT * FROM cpu_cooler WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
@@ -81,6 +97,13 @@ class CpuCoolerPdo extends PdoDb {
         $stmt->execute([
             ':id' => $item->getId()
         ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM cpu_cooler");
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

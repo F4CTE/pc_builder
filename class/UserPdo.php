@@ -2,6 +2,11 @@
 namespace App;
 class UserPdo extends PdoDb {
 
+    protected function createDbItem(array $element): null
+    {
+        return null;
+    }
+
     public function getAll(): array
     {
         $query = "SELECT * FROM users";
@@ -99,6 +104,13 @@ class UserPdo extends PdoDb {
         $stmt->execute([
             ':id' => $user->getId()
         ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM users");
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

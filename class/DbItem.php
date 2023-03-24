@@ -2,7 +2,7 @@
 namespace App;
 abstract class DbItem {
     protected ?int $id;
-    protected ?MbPdo $pdo;
+    protected ?PdoDb $pdo;
 
     public function __construct(?int $id = null) {
         $this->id = $id;

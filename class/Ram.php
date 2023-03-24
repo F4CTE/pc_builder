@@ -24,7 +24,7 @@ class Ram extends Part
             $producer,
             $mpn,
             $ean,
-            $imageLink ?? parent::defaultImage,
+            $imageLink,
             $id,
         );
 
@@ -54,7 +54,7 @@ class Ram extends Part
         return $this->pdo->delete($this);
     }
 
-    public function getNbStick(): int
+    public function getSticks(): int
     {
         return $this->nbStick;
     }

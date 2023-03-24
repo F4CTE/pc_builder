@@ -1,6 +1,9 @@
 <?php
+
 namespace App;
+
 use App\UserPdo;
+
 class user extends DbItem
 {
     private string $username;
@@ -75,7 +78,7 @@ class user extends DbItem
     public function setPassword(string $password): void
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
-        $this -> save();
+        $this->save();
     }
 
     public function isPasswordCorrect(string $password): bool
@@ -83,5 +86,3 @@ class user extends DbItem
         return password_verify($password, $this->password);
     }
 }
-
-

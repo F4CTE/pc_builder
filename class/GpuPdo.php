@@ -3,6 +3,27 @@ namespace App;
 
 class GpuPdo extends PdoDb {
 
+    public function createDbItem(array $arrayItem): Gpu
+    {
+        $gpu = new Gpu(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            intval($arrayItem['boost_clock']),
+            intval($arrayItem['vram']),
+            intval($arrayItem['memory_clock']),
+            intval($arrayItem['length']),
+            array("pin_8" => intval($arrayItem['pin_8']), "pin_6" => intval($arrayItem['pin_6'])),
+            intval($arrayItem['TDP']),
+            $arrayItem['MPN'],
+            $arrayItem['EAN'],
+            $arrayItem['image_url'] ?? null,
+            null
+        );
+
+        $gpu->save();
+        return $gpu;
+    }
+
     public function getAll(): array
     {
         $query = "SELECT * FROM gpus";
@@ -14,11 +35,11 @@ class GpuPdo extends PdoDb {
             $gpus[] = new Gpu(
                 $row['name'],
                 $row['producer'],
-                $row['BoostClock'],
+                $row['boostClock'],
                 $row['vram'],
                 $row['memoryClock'],
                 $row['length'],
-                $row['powerSupply'],
+                json_decode($row['powerSupply']),
                 $row['tdp'], 
                 $row['mpn'],
                 $row['ean'],
@@ -30,7 +51,7 @@ class GpuPdo extends PdoDb {
         return $gpus;
     }
 
-    public function getById(int $id): ?object
+    public function getById(int $id): ?Gpu
     {
         $query = "SELECT * FROM gpus WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
@@ -39,11 +60,11 @@ class GpuPdo extends PdoDb {
         return new Gpu(
             $row['name'],
             $row['producer'],
-            $row['BoostClock'],
+            $row['boostClock'],
             $row['vram'],
             $row['memoryClock'],
             $row['length'],
-            $row['powerSupply'],
+            json_decode($row['powerSupply']),
             $row['tdp'], 
             $row['mpn'],
             $row['ean'],
@@ -54,16 +75,16 @@ class GpuPdo extends PdoDb {
 
     public function create($item): ?int
     {
-        $query = "INSERT INTO gpus (name, producer, BoostClock, vram, memoryClock, length, powerSupply, tdp, mpn, ean, imageLink) VALUES (:name, :producer, :BoostClock, :vram, :memoryClock, :length, :powerSupply, :tdp, :mpn, :ean, :imageLink)";
+        $query = "INSERT INTO gpus (name, producer, boostClock, vram, memoryClock, length, powerSupply, tdp, mpn, ean, imageLink) VALUES (:name, :producer, :boostClock, :vram, :memoryClock, :length, :powerSupply, :tdp, :mpn, :ean, :imageLink)";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
-            ':BoostClock' => $item->getBoostClock(),
+            ':boostClock' => $item->getBoostClock(),
             ':vram' => $item->getVram(),
             ':memoryClock' => $item->getMemoryClock(),
             ':length' => $item->getLength(),
-            ':powerSupply' => $item->getPowerSupply(),
+            ':powerSupply' => json_encode($item->getPowerSupply()),
             ':tdp' => $item->getTdp(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
@@ -74,16 +95,16 @@ class GpuPdo extends PdoDb {
 
     public function update($item): ?bool
     {
-        $query = "UPDATE gpus SET name = :name, producer = :producer, BoostClock = :BoostClock, vram = :vram, memoryClock = :memoryClock, length = :length, powerSupply = :powerSupply, tdp = :tdp, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
+        $query = "UPDATE gpus SET name = :name, producer = :producer, boostClock = :boostClock, vram = :vram, memoryClock = :memoryClock, length = :length, powerSupply = :powerSupply, tdp = :tdp, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         return $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
-            ':BoostClock' => $item->getBoostClock(),
+            ':boostClock' => $item->getBoostClock(),
             ':vram' => $item->getVram(),
             ':memoryClock' => $item->getMemoryClock(),
             ':length' => $item->getLength(),
-            ':powerSupply' => $item->getPowerSupply(),
+            ':powerSupply' => json_encode($item->getPowerSupply()),
             ':tdp' => $item->getTdp(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
@@ -98,5 +119,12 @@ class GpuPdo extends PdoDb {
         $stmt = $this->pdo->prepare($query);
         return $stmt->execute([':id' => $item->getId()]);
         
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $query = "DELETE FROM gpus";
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute();
     }
 }

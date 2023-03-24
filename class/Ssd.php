@@ -72,12 +72,12 @@ class Ssd extends Part
         return $this->storage;
     }
 
-    public function getNand(): string
+    public function getNand(): ?string
     {
         return $this->nand;
     }
 
-    public function getController(): string
+    public function getController(): ?string
     {
         return $this->controller;
     }

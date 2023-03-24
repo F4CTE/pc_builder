@@ -2,6 +2,35 @@
 namespace App;
 class MbPdo extends PdoDb
 {
+    public function createDbItem(array $arrayItem): ?Mb
+    {
+        $mb = new Mb(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            $arrayItem['socket'],
+            $arrayItem['chipset'],
+            $arrayItem['form'],
+            $arrayItem['memory_type'],
+            array(
+                'ram' => intval($arrayItem['ramslots'] ?? 0),
+                'sata' => intval($arrayItem['sata'] ?? 0),
+                'm2Pcie3' => intval($arrayItem['m2_pcie3'] ?? 0),
+                'm2Pcie4' => intval($arrayItem['m2_pcie4'] ?? 0),
+                'pcie3X1' => intval($arrayItem['pcie_3_x1'] ?? 0),
+                'pcie3X16' => intval($arrayItem['pcie_3_x16'] ?? 0),
+                'pcie4X1' => intval($arrayItem['pcie_4_x1'] ?? 0),
+                'pcie4X16' => intval($arrayItem['pcie_4_x16'] ?? 0),
+            ),
+            $arrayItem['memory_capacity'] ?? null,
+            $arrayItem['MPN'],
+            $arrayItem['EAN'],
+            $arrayItem['selection2'] ?? null,
+            null
+        );
+        $mb->save();
+        return $mb;
+    }
+
     public function getById(int $id): ?Mb
     {
         $query = "SELECT * FROM motherboards WHERE id = :id";
@@ -99,4 +128,13 @@ class MbPdo extends PdoDb
         $stmt->execute([':id' => $item->getId()]);
         return $stmt->rowCount() > 0;
     }
+
+    public function deleteAll(): ?bool
+    {
+        $query = "DELETE FROM motherboards";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
 }   

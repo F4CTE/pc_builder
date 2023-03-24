@@ -114,7 +114,7 @@ class Mb extends Part
                 return $this->ports['ram'];
         }
 
-        public function getMemoryCapacity(): int
+        public function getMemoryCapacity(): ?int
         {
                 return $this->memoryCapacity;
         }

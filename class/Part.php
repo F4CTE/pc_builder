@@ -36,7 +36,7 @@ abstract class Part extends DbItem{
         return $this->producer;
     }
 
-    final public function getMpn():string {
+    final public function getMpn(): ?string {
         return $this->mpn;
     }
     

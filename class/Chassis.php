@@ -1,6 +1,9 @@
 <?php
+
 namespace App;
-class Chassis extends part {
+
+class Chassis extends part
+{
     private string $MbFormat;
     private string $psuFormat;
     private int $maxGpuSize;
@@ -9,7 +12,7 @@ class Chassis extends part {
     public function __construct(
         string $name,
         string $producer,
-        string$MbFormat,
+        string $MbFormat,
         string $psuFormat,
         int $maxGpuSize,
         int $MaxCpuCoolerHeight,
@@ -33,7 +36,8 @@ class Chassis extends part {
         $this->MaxCpuCoolerHeight = $MaxCpuCoolerHeight;
     }
 
-    protected function createPdo() : void{
+    protected function createPdo(): void
+    {
         $this->pdo = new ChassisPdo();
     }
 

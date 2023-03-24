@@ -1,6 +1,9 @@
 <?php
+
 namespace App;
-class Cpu extends Part {
+
+class Cpu extends Part
+{
     private float $baseClock;
     private float $turboClock;
     private int $cores;

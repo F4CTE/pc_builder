@@ -1,6 +1,9 @@
 <?php
+
 namespace App;
-class build extends DbItem{
+
+class build extends DbItem
+{
     private int $userId;
     private string $name;
     private array $parts = [
@@ -61,5 +64,4 @@ class build extends DbItem{
     {
         return $this->parts;
     }
-
 }

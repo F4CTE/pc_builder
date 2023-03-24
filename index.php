@@ -5,39 +5,22 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Symfony\Component\Dotenv\Dotenv;
 use App\CpuImport;
 use App\ChassisImport;
+use App\ChassisPdo;
 use App\CpuCoolerImport;
 use App\GpuImport;
+use App\GpuPdo;
 use App\HddImport;
+use App\HddPdo;
 use App\MbImport;
+use App\MbPdo;
 use App\ObjectToDb;
 use App\PsuImport;
+use App\PsuPdo;
 use App\RamImport;
 use App\SsdImport;
+use App\SsdPdo;
 use App\UserPdo;
 
 $dotenv = new Dotenv();
 $dotenv->loadEnv(__DIR__ . '/.env');
-
-$cpuimport = new CpuImport(__DIR__ . '/json/CPUs.json');
-$cpuimport->import();
-
-$chassisImport = new ChassisImport(__DIR__ . '/json/Cases.json');
-$chassisImport->import();
-
-$CpuCoolerImport = new CpuCoolerImport(__DIR__ . '/json/CPU_COOLERs.json');
-$CpuCoolerImport->import();
-
-$gpuImport = new GpuImport(__DIR__ . '/json/GPUs.json');
-
-$hddImport = new HddImport(__DIR__ . '/json/HDDs.json');
-
-$MbImport = new MbImport(__DIR__ . '/json/MOTHERBOARDs.json');
-
-$PsuImport = new PsuImport(__DIR__ . '/json/PSUs.json');
-
-$ramImport = new RamImport(__DIR__ . '/json/RAMs.json');
-
-$ssdimport = new SsdImport(__DIR__ . '/json/SSDs.json');
-
-
-$pdoDb = new UserPdo();
+(new SsdPdo())->import(__DIR__ . '/json/SSDs.json');

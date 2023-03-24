@@ -1,5 +1,7 @@
 <?php
+
 namespace App;
+
 class CpuCooler extends Part
 {
     private array $sockets;
@@ -43,7 +45,8 @@ class CpuCooler extends Part
         return $this->pdo->update($this);
     }
 
-    protected function delete(): bool{
+    protected function delete(): bool
+    {
         return $this->pdo->delete($this);
     }
 

@@ -6,7 +6,7 @@ class Gpu extends Part
     private int $vram;
     private int $memoryClock;
     private int $length;
-    private array $powerSupply;
+    private ?array $powerSupply;
     private int $tdp;
 
     public function __construct(
@@ -16,7 +16,7 @@ class Gpu extends Part
         int $vram,
         int $memoryClock,
         int $length,
-        array $powerSupply,
+        ?array $powerSupply,
         ?int $tdp = null,
         ?string $mpn = null,
         ?int $ean = null,

@@ -1,10 +1,32 @@
 <?php
+
 namespace App;
 
-class CpuPdo extends PdoDb {
+class CpuPdo extends PdoDb
+{
+    public function createDbItem(array $arrayItem): Cpu
+    {
+        $cpu = new Cpu(
+            $arrayItem['name'],
+            $arrayItem['Producer'],
+            floatval($arrayItem['basse_clock']),
+            floatval($arrayItem['turbo_clock']),
+            $arrayItem['cores'],
+            $arrayItem['threads'],
+            $arrayItem['socket'],
+            intval($arrayItem['TDP']),
+            $arrayItem['MPN'],
+            $arrayItem['EAN'],
+            $arrayItem['cpu_image_link'] ?? null,
+            null,
+        );
+        $cpu->save();
+        return $cpu;
+    }
+
     public function getAll(): array
     {
-        $sql = 'SELECT * FROM cpu';
+        $sql = 'SELECT * FROM cpus';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -13,79 +35,79 @@ class CpuPdo extends PdoDb {
             $cpuList[] = new Cpu(
                 $cpu['name'],
                 $cpu['producer'],
-                floatval($cpu['base_clock']),
-                floatval($cpu['turbo_clock']),
+                floatval($cpu['baseClock']),
+                floatval($cpu['turboClock']),
                 intval($cpu['cores']),
                 intval($cpu['threads']),
                 $cpu['socket'],
                 intval($cpu['tdp']),
                 $cpu['mpn'],
                 $cpu['ean'],
-                $cpu['image_link'],
+                $cpu['imageLink'],
                 intval($cpu['id']),
             );
         }
         return $cpuList;
     }
 
-    public function getById(int $id): ?object
+    public function getById(int $id): ?Cpu
     {
-        $sql = 'SELECT * FROM cpu WHERE id = :id';
+        $sql = 'SELECT * FROM cpus WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         $cpu = $stmt->fetch(\PDO::FETCH_ASSOC);
         return new Cpu(
             $cpu['name'],
             $cpu['producer'],
-            floatval($cpu['base_clock']),
-            floatval($cpu['turbo_clock']),
+            floatval($cpu['baseClock']),
+            floatval($cpu['turboClock']),
             intval($cpu['cores']),
             intval($cpu['threads']),
             $cpu['socket'],
             intval($cpu['tdp']),
             $cpu['mpn'],
             $cpu['ean'],
-            $cpu['image_link'],
+            $cpu['imageLink'],
             intval($cpu['id']),
         );
     }
 
-    public function create ($item): ?int
+    public function create($item): ?int
     {
-        $sql = 'INSERT INTO cpu (name, producer, base_clock, turbo_clock, cores, threads, socket, tdp, mpn, ean, image_link) VALUES (:name, :producer, :base_clock, :turbo_clock, :cores, :threads, :socket, :tdp, :mpn, :ean, :image_link)';
+        $sql = 'INSERT INTO cpus (name, producer, baseClock, turboClock, cores, threads, socket, tdp, mpn, ean, imageLink) VALUES (:name, :producer, :baseClock, :turboClock, :cores, :threads, :socket, :tdp, :mpn, :ean, :imageLink)';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
-            ':base_clock' => $item->getBaseClock(),
-            ':turbo_clock' => $item->getTurboClock(),
+            ':baseClock' => $item->getBaseClock(),
+            ':turboClock' => $item->getTurboClock(),
             ':cores' => $item->getCores(),
             ':threads' => $item->getThreads(),
             ':socket' => $item->getSocket(),
             ':tdp' => $item->getTdp(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
-            ':image_link' => $item->getImageLink(),
+            ':imageLink' => $item->getImageLink(),
         ]);
         return $this->pdo->lastInsertId();
     }
 
     public function update($item): ?bool
     {
-        $sql = 'UPDATE cpu SET name = :name, producer = :producer, base_clock = :base_clock, turbo_clock = :turbo_clock, cores = :cores, threads = :threads, socket = :socket, tdp = :tdp, mpn = :mpn, ean = :ean, image_link = :image_link WHERE id = :id';
+        $sql = 'UPDATE cpus SET name = :name, producer = :producer, baseClock = :baseClock, turboClock = :turboClock, cores = :cores, threads = :threads, socket = :socket, tdp = :tdp, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
-            ':base_clock' => $item->getBaseClock(),
-            ':turbo_clock' => $item->getTurboClock(),
+            ':baseClock' => $item->getBaseClock(),
+            ':turboClock' => $item->getTurboClock(),
             ':cores' => $item->getCores(),
             ':threads' => $item->getThreads(),
             ':socket' => $item->getSocket(),
             ':tdp' => $item->getTdp(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
-            ':image_link' => $item->getImageLink(),
+            ':imageLink' => $item->getImageLink(),
             ':id' => $item->getId(),
         ]);
         return $stmt->rowCount() > 0;
@@ -93,9 +115,17 @@ class CpuPdo extends PdoDb {
 
     public function delete($item): ?bool
     {
-        $sql = 'DELETE FROM cpu WHERE id = :id';
+        $sql = 'DELETE FROM cpus WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $item->getId()]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $sql = 'DELETE FROM cpus';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

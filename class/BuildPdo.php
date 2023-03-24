@@ -1,6 +1,14 @@
 <?php
+
 namespace App;
-class BuildPdo extends PdoDb {
+
+class BuildPdo extends PdoDb
+{
+    protected function createDbItem(array $element): null
+    {
+        return null;
+    }
+
     public function getAll(): array
     {
         $sql = 'SELECT * FROM builds';
@@ -19,7 +27,7 @@ class BuildPdo extends PdoDb {
         return $buildsArray;
     }
 
-    public function getById(int $id): ?object
+    public function getById(int $id): ?build
     {
         $sql = 'SELECT * FROM builds WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
@@ -63,6 +71,14 @@ class BuildPdo extends PdoDb {
         $sql = 'DELETE FROM builds WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $item->getId()]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $sql = 'DELETE FROM builds';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

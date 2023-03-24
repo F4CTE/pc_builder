@@ -1,6 +1,28 @@
 <?php
+
 namespace App;
-class ChassisPdo extends PdoDb {
+
+class ChassisPdo extends PdoDb
+{
+
+    protected function createDbItem(array $arrayItem): ?Chassis
+    {
+        $chassis = new Chassis(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            $arrayItem['Motherboard'],
+            $arrayItem['Psu'] ?? $arrayItem['Motherboard'],
+            intval($arrayItem['gpu_size']),
+            intval($arrayItem['cpu_cooler_height']),
+            $arrayItem['mpn'],
+            $arrayItem['ean'],
+            $arrayItem['image_url'] ?? null,
+            null
+        );
+        $chassis->save();
+        return $chassis;
+    }
+
     public function getAll(): array
     {
         $sql = 'SELECT * FROM chassis';
@@ -13,19 +35,19 @@ class ChassisPdo extends PdoDb {
                 $row['name'],
                 $row['producer'],
                 $row['mbFormat'],
-                $row['psuFormat'],
+                $row['psuFormat'] ?? $row['mbFormat'],
                 $row['maxGpuSize'],
                 $row['maxCpuCoolerHeight'],
                 $row['mpn'],
                 $row['ean'],
-                $row['image_url'],
+                $row['imageLink'],
                 $row['id']
             );
         }
         return $chassis;
     }
 
-    public function getById(int $id): ?object
+    public function getById(int $id): ?Chassis
     {
         $sql = 'SELECT * FROM chassis WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
@@ -35,48 +57,48 @@ class ChassisPdo extends PdoDb {
             $row['name'],
             $row['producer'],
             $row['mbFormat'],
-            $row['psuFormat'],
+            $row['psuFormat'] ?? $row['mbFormat'],
             $row['maxGpuSize'],
             $row['maxCpuCoolerHeight'],
             $row['mpn'],
             $row['ean'],
-            $row['image_url'],
+            $row['imageLink'],
             $row['id']
         );
     }
 
     public function create($item): ?int
     {
-        $sql = 'INSERT INTO chassis (name, producer, mbFormat, psuFormat, maxGpuSize, maxCpuCoolerHeight, mpn, ean, image_url) VALUES (:name, :producer, :mbFormat, :psuFormat, :maxGpuSize, :maxCpuCoolerHeight, :mpn, :ean, :image_url)';
+        $sql = 'INSERT INTO chassis (name, producer, mbFormat, psuFormat, maxGpuSize, maxCpuCoolerHeight, mpn, ean, imageLink) VALUES (:name, :producer, :mbFormat, :psuFormat, :maxGpuSize, :maxCpuCoolerHeight, :mpn, :ean, :imageLink)';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
             ':mbFormat' => $item->getMbFormat(),
-            ':psuFormat' => $item->getPsuFormat(),
+            ':psuFormat' => $item->getPsuFormat() ?? $item->getMbFormat(),
             ':maxGpuSize' => $item->getMaxGpuSize(),
             ':maxCpuCoolerHeight' => $item->getMaxCpuCoolerHeight(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
-            ':image_url' => $item->getImageLink()
+            ':imageLink' => $item->getImageLink()
         ]);
         return $this->pdo->lastInsertId();
     }
 
     public function update($item): ?bool
     {
-        $sql = 'UPDATE chassis SET name = :name, producer = :producer, mbFormat = :mbFormat, psuFormat = :psuFormat, maxGpuSize = :maxGpuSize, maxCpuCoolerHeight = :maxCpuCoolerHeight, mpn = :mpn, ean = :ean, image_url = :image_url WHERE id = :id';
+        $sql = 'UPDATE chassis SET name = :name, producer = :producer, mbFormat = :mbFormat, psuFormat = :psuFormat, maxGpuSize = :maxGpuSize, maxCpuCoolerHeight = :maxCpuCoolerHeight, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
             ':mbFormat' => $item->getMbFormat(),
-            ':psuFormat' => $item->getPsuFormat(),
+            ':psuFormat' => $item->getPsuFormat() ?? $item->getMbFormat(),
             ':maxGpuSize' => $item->getMaxGpuSize(),
             ':maxCpuCoolerHeight' => $item->getMaxCpuCoolerHeight(),
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
-            ':image_url' => $item->getImageLink(),
+            ':imageLink' => $item->getImageLink(),
             ':id' => $item->getId()
         ]);
         return $stmt->rowCount() > 0;
@@ -89,6 +111,14 @@ class ChassisPdo extends PdoDb {
         $stmt->execute([
             ':id' => $item->getId()
         ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): ?bool
+    {
+        $sql = 'DELETE FROM chassis';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

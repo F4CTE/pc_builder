@@ -2,6 +2,23 @@
 namespace App;
 class PsuPdo extends PdoDb {
 
+    public function createDbItem(array $arrayItem): ?Psu
+    {
+        $psu = new Psu(
+            $arrayItem['name'],
+            $arrayItem['producer'],
+            $arrayItem['watt'],
+            array("pin_8" => $arrayItem['pin_8'] ?? 0, "pin_6" => $arrayItem['pin_6']?? 0),
+            $arrayItem['size'] ?? null,
+            $arrayItem['mpn'],
+            $arrayItem['ean'],
+            $arrayItem['image_url'] ?? null,
+            null
+        );
+        $psu->save();
+        return $psu;
+    }
+
     public function getAll(): array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM psus");
@@ -24,7 +41,7 @@ class PsuPdo extends PdoDb {
         return $psus;
     }
 
-    public function getById(int $psuId): Psu
+    public function getById(int $psuId): ?Psu
     {
         $stmt = $this->pdo->prepare("SELECT * FROM psus WHERE id=:id");
         $stmt->execute([
@@ -47,7 +64,7 @@ class PsuPdo extends PdoDb {
 
     public function create($psu): ?int
     {
-        $stmt = $this->pdo->prepare("INSERT INTO psus (name,producer,power,connectics,format,mpn,ean,image_url) VALUES (:name,:producer,:power,:connectics,:format,:mpn,:ean,:image_url);");
+        $stmt = $this->pdo->prepare("INSERT INTO psus (name,producer,power,connectics,format,mpn,ean,imageLink) VALUES (:name,:producer,:power,:connectics,:format,:mpn,:ean,:imageLink);");
         $stmt->execute([
             ':name' => $psu->getName(),
             ':producer' => $psu->getProducer(),
@@ -56,14 +73,14 @@ class PsuPdo extends PdoDb {
             ':format' => $psu->getFormat(),
             ':mpn' => $psu->getMpn(),
             ':ean' => $psu->getEan(),
-            ':image_url' => $psu->getImageLink()
+            ':imageLink' => $psu->getImageLink()
         ]);
         return $this->pdo->lastInsertId();
     }
 
     public function update($psu): bool
     {
-        $stmt = $this->pdo->prepare("UPDATE psus SET name = :name, producer = :producer, power = :power, connectics = :connectics, format = :format, mpn = :mpn, ean = :ean, image_url = :image_url WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE psus SET name = :name, producer = :producer, power = :power, connectics = :connectics, format = :format, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id");
         $stmt->execute([
             ':name' => $psu->getName(),
             ':producer' => $psu->getProducer(),
@@ -72,7 +89,7 @@ class PsuPdo extends PdoDb {
             ':format' => $psu->getFormat(),
             ':mpn' => $psu->getMpn(),
             ':ean' => $psu->getEan(),
-            ':image_url' => $psu->getImageLink(),
+            ':imageLink' => $psu->getImageLink(),
             ':id' => $psu->getId()
         ]);
         return $stmt->rowCount() > 0;
@@ -84,6 +101,13 @@ class PsuPdo extends PdoDb {
         $stmt->execute([
             ':id' => $psu->getId()
         ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deleteAll(): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM psus");
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

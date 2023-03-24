@@ -7,7 +7,7 @@ use PDOException;
 
 abstract class PdoDb
 {
-    protected PDO $pdo;
+    protected ?PDO $pdo;
     protected string $dsn;
     const options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -24,7 +24,23 @@ abstract class PdoDb
         };
     }
 
-    abstract public function getById(int $id): ?object;
+    public function __destruct()
+    {
+        $this->pdo = null;
+    }
+
+    final public function import($path)
+    {
+        $filecontents = file_get_contents($path);
+        $elements = json_decode($filecontents, true);
+        foreach ($elements as $element) {
+            $this->createDbItem($element);
+        }
+    }
+
+    abstract protected function createDbItem(array $element): ?DbItem;
+
+    abstract public function getById(int $id): ?DbItem;
 
     abstract public function getAll(): array;
 
@@ -33,4 +49,6 @@ abstract class PdoDb
     abstract public function update($item): ?bool;
 
     abstract public function delete($item): ?bool;
+
+    abstract public function deleteAll(): ?bool;
 }
