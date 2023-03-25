@@ -1,8 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Chassis;
 
-class Chassis extends part
+use App\Parent\Part;
+
+class Chassis extends Part
 {
     private string $MbFormat;
     private string $psuFormat;

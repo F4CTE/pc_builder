@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Chassis;
+
+use App\Parent\PdoDb;
 
 class ChassisPdo extends PdoDb
 {

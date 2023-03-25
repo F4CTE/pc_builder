@@ -1,5 +1,7 @@
 <?php
-namespace App;
+namespace App\Gpu;
+
+use App\Parent\PdoDb;
 
 class GpuPdo extends PdoDb {
 

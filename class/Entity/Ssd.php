@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Ssd;
+
+use App\Parent\Part;
+
 class Ssd extends Part
 {
     private string $form;

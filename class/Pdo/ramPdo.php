@@ -1,5 +1,8 @@
 <?php 
-namespace App;
+namespace App\Ram;
+
+use App\Parent\PdoDb;
+
 class RamPdo extends PdoDb {
 
     public function createDbItem(array $arrayItem): ?ram
@@ -13,7 +16,7 @@ class RamPdo extends PdoDb {
             $arrayItem['sticks'],
             $arrayItem['MPN'],
             $arrayItem['EAN'],
-            $arrayItem['image_url'] ?? Part::defaultImage,
+            $arrayItem['image_url'] ?? null,
             null
         );
         

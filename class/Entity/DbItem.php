@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Parent;
 abstract class DbItem {
     protected ?int $id;
     protected ?PdoDb $pdo;

@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Mb;
+
+use App\Parent\PdoDb;
+
 class MbPdo extends PdoDb
 {
     public function createDbItem(array $arrayItem): ?Mb

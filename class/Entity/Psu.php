@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Psu;
+
+use App\Parent\Part;
+
 class Psu extends Part
 {
     private int $power;

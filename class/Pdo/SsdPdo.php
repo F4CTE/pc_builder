@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Ssd;
+
+use App\Parent\PdoDb;
+
 class SsdPdo extends PdoDb {
 
     public function createDbItem(array $arrayItem): Ssd
@@ -14,7 +17,7 @@ class SsdPdo extends PdoDb {
             $arrayItem['nand'] ?? null,
             $arrayItem['mpn'],
             $arrayItem['ean'],
-            $arrayItem['image_url'] ?? Part::defaultImage,
+            $arrayItem['image_url'] ?? null,
             null
         );
         $ssd->save();

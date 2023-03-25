@@ -1,10 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Parent;
 
 use PDO;
 use PDOException;
 use Symfony\Component\Dotenv\Dotenv;
+
 abstract class PdoDb
 {
     protected ?PDO $pdo;
@@ -16,7 +17,7 @@ abstract class PdoDb
 
     final public function __construct()
     {
-        (new Dotenv())->loadEnv(__DIR__ . '/.env');
+        (new Dotenv())->loadEnv(__DIR__.'/../../.env');
         
         $this->dsn = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=' . $_ENV['DB_CHARSET'];
         try {

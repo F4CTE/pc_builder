@@ -1,5 +1,8 @@
 <?php 
-namespace App;
+namespace App\Psu;
+
+use App\Parent\PdoDb;
+
 class PsuPdo extends PdoDb {
 
     public function createDbItem(array $arrayItem): ?Psu

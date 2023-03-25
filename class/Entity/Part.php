@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Parent;
 abstract class Part extends DbItem{
     protected string $name;
     protected string $imageLink;

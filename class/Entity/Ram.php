@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Ram;
+
+use App\Parent\Part;
+
 class Ram extends Part
 {
     private string $type;

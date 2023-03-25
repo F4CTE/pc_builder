@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Cpu;
+
+use App\Parent\PdoDb;
 
 class CpuPdo extends PdoDb
 {

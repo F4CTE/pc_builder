@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Cpu;
+
+use App\Parent\Part;
 
 class Cpu extends Part
 {

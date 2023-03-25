@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Mb;
+
+use App\Parent\Part;
+
 class Mb extends Part
 {
         private string $socket;

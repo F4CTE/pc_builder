@@ -1,5 +1,7 @@
 <?php
-namespace App;
+namespace App\CpuCooler;
+
+use App\Parent\PdoDb;
 
 class CpuCoolerPdo extends PdoDb {
 

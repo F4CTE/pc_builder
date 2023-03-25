@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Gpu;
+
+use App\Parent\Part;
+
 class Gpu extends Part
 {
     private int $boostClock;

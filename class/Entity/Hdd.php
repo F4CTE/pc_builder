@@ -1,23 +1,26 @@
 <?php
 
-namespace App;
+namespace App\Hdd;
 
-class CpuCooler extends Part
+use App\Parent\Part;
+
+class Hdd extends Part
 {
-    private array $sockets;
-    private int $height;
+    private int $size;
+    private int $rpm;
 
     public function __construct(
         string $name,
         string $producer,
-        int $height,
-        array $sockets,
+        int $size,
+        int $rpm,
         ?string $mpn = null,
         ?int $ean = null,
         ?string $imageLink = parent::defaultImage,
         ?int $id = null,
     ) {
         parent::__construct(
+
             $name,
             $producer,
             $mpn,
@@ -26,37 +29,37 @@ class CpuCooler extends Part
             $id,
         );
 
-        $this->sockets = $sockets;
-        $this->height = $height;
+        $this->size = $size;
+        $this->rpm = $rpm;
     }
 
     protected function createPdo(): void
     {
-        $this->pdo = new CpuCoolerPdo();
+        $this->pdo = new HddPdo();
     }
 
     protected function insert(): int
     {
-        return $this->pdo->create($this);
+        return (new HddPdo())->create($this);
     }
 
     protected function update(): bool
     {
-        return $this->pdo->update($this);
+        return (new HddPdo())->update($this);
     }
 
     protected function delete(): bool
     {
-        return $this->pdo->delete($this);
+        return (new HddPdo())->delete($this);
     }
 
-    public function getSockets(): array
+    public function getRpm(): int
     {
-        return $this->sockets;
+        return $this->rpm;
     }
 
-    public function getHeight(): int
+    public function getSize(): int
     {
-        return $this->height;
+        return $this->size;
     }
 }

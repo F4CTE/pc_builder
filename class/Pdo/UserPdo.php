@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\User;
+
+use App\Parent\PdoDb;
+
 class UserPdo extends PdoDb {
 
     protected function createDbItem(array $element): null

@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\User;
 
+use App\Parent\DbItem;
 use App\UserPdo;
 
 class user extends DbItem
@@ -22,7 +23,7 @@ class user extends DbItem
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
-        $this->admin = $admin ?? false;
+        $this->admin = $admin;
     }
 
     final protected function createPdo(): void

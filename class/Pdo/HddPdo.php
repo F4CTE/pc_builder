@@ -1,5 +1,8 @@
 <?php
-namespace App;
+namespace App\Hdd;
+
+use App\Parent\PdoDb;
+
 class HddPdo extends PdoDb
 {
     public function createDbItem(array $arrayItem): Hdd

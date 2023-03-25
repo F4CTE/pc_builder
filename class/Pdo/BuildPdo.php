@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Build;
+
+use App\Parent\PdoDb;
 
 class BuildPdo extends PdoDb
 {
