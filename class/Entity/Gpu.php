@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Gpu;
 
 use App\Parent\Part;
@@ -23,7 +24,7 @@ class Gpu extends Part
         ?int $tdp = null,
         ?string $mpn = null,
         ?int $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
 
@@ -32,7 +33,7 @@ class Gpu extends Part
             $producer,
             $mpn,
             $ean,
-            $imageLink ?? parent::defaultImage,
+            $imageLink,
             $id,
         );
 

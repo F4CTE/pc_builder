@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Hdd;
 
 use App\Parent\PdoDb;
@@ -25,7 +26,6 @@ class HddPdo extends PdoDb
         );
         $hdd->save();
         return $hdd;
-        
     }
 
     public function getAll(): array

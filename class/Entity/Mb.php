@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mb;
 
 use App\Parent\Part;
@@ -32,7 +33,7 @@ class Mb extends Part
                 ?int $memoryCapacity = null,
                 ?string $mpn = null,
                 ?int $ean = null,
-                ?string $imageLink = parent::defaultImage,
+                ?string $imageLink = null,
                 ?int $id = null,
         ) {
                 parent::__construct(
@@ -40,7 +41,7 @@ class Mb extends Part
                         $producer,
                         $mpn,
                         $ean,
-                        $imageLink ?? parent::defaultImage,
+                        $imageLink,
                         $id,
                 );
 

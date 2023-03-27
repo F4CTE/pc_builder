@@ -3,7 +3,6 @@
 namespace App\User;
 
 use App\Parent\DbItem;
-use App\UserPdo;
 
 class user extends DbItem
 {

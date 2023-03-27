@@ -1,23 +1,30 @@
 <?php
+
 namespace App\Parent;
-abstract class DbItem {
+
+abstract class DbItem
+{
     protected ?int $id;
     protected ?PdoDb $pdo;
 
-    public function __construct(?int $id = null) {
+    public function __construct(?int $id = null)
+    {
         $this->id = $id;
         $this->createPdo();
     }
 
-    final public function getId(): int {
+    final public function getId(): int
+    {
         return $this->id;
     }
 
-    final public function save(): void {
+    final public function save(): void
+    {
         !is_null($this->id) ? $this->update() : $this->id = $this->insert();
     }
 
-    final public function destroy(): void {
+    final public function destroy(): void
+    {
         $this->delete();
         unset($this->id);
     }

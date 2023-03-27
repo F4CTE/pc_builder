@@ -22,7 +22,8 @@
             "App\\CpuCooler\\": ["class/Entity", "class/Pdo"],
             "App\\Parent\\": ["class/Entity", "class/Pdo"],
             "App\\User\\": ["class/Entity", "class/Pdo"],
-            "App\\Build\\": ["class/Entity", "class/Pdo"]
+            "App\\Build\\": ["class/Entity", "class/Pdo"],
+            "App\\Exception\\": "class/Exception"
         }
     },
     "config": {

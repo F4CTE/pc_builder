@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Mb;
 
 use App\Parent\PdoDb;
 
 class MbPdo extends PdoDb
 {
-    public function createDbItem(array $arrayItem): ?Mb
+    public function createDbItem(array $arrayItem): Mb
     {
         $mb = new Mb(
             $arrayItem['name'],
@@ -54,7 +55,6 @@ class MbPdo extends PdoDb
             $row['imageLink'],
             $row['id']
         );
-
     }
 
     public function getAll(): array
@@ -139,5 +139,4 @@ class MbPdo extends PdoDb
         $stmt->execute();
         return $stmt->rowCount() > 0;
     }
-
-}   
+}

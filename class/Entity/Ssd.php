@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Ssd;
 
 use App\Parent\Part;
@@ -21,7 +22,7 @@ class Ssd extends Part
         ?string $nand = null,
         ?string $mpn = null,
         ?int $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
         parent::__construct(
@@ -29,7 +30,7 @@ class Ssd extends Part
             $producer,
             $mpn,
             $ean,
-            $imageLink ?? parent::defaultImage,
+            $imageLink,
             $id,
         );
 

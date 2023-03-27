@@ -1,14 +1,11 @@
 <?php
+
 namespace App\User;
 
 use App\Parent\PdoDb;
 
-class UserPdo extends PdoDb {
-
-    protected function createDbItem(array $element): null
-    {
-        return null;
-    }
+class UserPdo extends PdoDb
+{
 
     public function getAll(): array
     {
@@ -78,14 +75,14 @@ class UserPdo extends PdoDb {
 
     public function create($user): ?int
     {
-            $stmt = $this->pdo->prepare("INSERT INTO users (username,email,password,admin) VALUES (:username,:email,:password,:admin);");
-            $stmt->execute([
-                ':username' => $user->getUsername(),
-                ':email' => $user->getEmail(),
-                ':password' => $user->getPassword(),
-                ':admin' => $user->isAdmin()
-            ]);
-            return $this->pdo->lastInsertId();
+        $stmt = $this->pdo->prepare("INSERT INTO users (username,email,password,admin) VALUES (:username,:email,:password,:admin);");
+        $stmt->execute([
+            ':username' => $user->getUsername(),
+            ':email' => $user->getEmail(),
+            ':password' => $user->getPassword(),
+            ':admin' => $user->isAdmin()
+        ]);
+        return $this->pdo->lastInsertId();
     }
 
     public function update($user): bool

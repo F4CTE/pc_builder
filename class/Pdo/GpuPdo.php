@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Gpu;
 
 use App\Parent\PdoDb;
 
-class GpuPdo extends PdoDb {
+class GpuPdo extends PdoDb
+{
 
     public function createDbItem(array $arrayItem): Gpu
     {
@@ -42,18 +44,17 @@ class GpuPdo extends PdoDb {
                 $row['memoryClock'],
                 $row['length'],
                 json_decode($row['powerSupply']),
-                $row['tdp'], 
+                $row['tdp'],
                 $row['mpn'],
                 $row['ean'],
                 $row['imageLink'],
                 $row['id']
             );
-        
         }
         return $gpus;
     }
 
-    public function getById(int $id): ?Gpu
+    public function getById(int $id): Gpu
     {
         $query = "SELECT * FROM gpus WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
@@ -67,7 +68,7 @@ class GpuPdo extends PdoDb {
             $row['memoryClock'],
             $row['length'],
             json_decode($row['powerSupply']),
-            $row['tdp'], 
+            $row['tdp'],
             $row['mpn'],
             $row['ean'],
             $row['imageLink'],
@@ -120,7 +121,6 @@ class GpuPdo extends PdoDb {
         $query = "DELETE FROM gpus WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         return $stmt->execute([':id' => $item->getId()]);
-        
     }
 
     public function deleteAll(): ?bool

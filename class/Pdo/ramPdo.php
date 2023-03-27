@@ -1,11 +1,13 @@
-<?php 
+<?php
+
 namespace App\Ram;
 
 use App\Parent\PdoDb;
 
-class RamPdo extends PdoDb {
+class RamPdo extends PdoDb
+{
 
-    public function createDbItem(array $arrayItem): ?ram
+    public function createDbItem(array $arrayItem): ram
     {
         $ram = new Ram(
             $arrayItem['name'],
@@ -19,7 +21,7 @@ class RamPdo extends PdoDb {
             $arrayItem['image_url'] ?? null,
             null
         );
-        
+
         $ram->save();
         return $ram;
     }

@@ -20,7 +20,7 @@ class Chassis extends Part
         int $MaxCpuCoolerHeight,
         ?string $mpn = null,
         ?int $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
         parent::__construct(

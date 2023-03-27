@@ -1,9 +1,11 @@
 <?php
+
 namespace App\CpuCooler;
 
 use App\Parent\PdoDb;
 
-class CpuCoolerPdo extends PdoDb {
+class CpuCoolerPdo extends PdoDb
+{
 
     protected function createDbItem(array $arrayItem): CpuCooler
     {
@@ -21,13 +23,14 @@ class CpuCoolerPdo extends PdoDb {
         return $cpuCooler;
     }
 
-    public function getAll(): array {
+    public function getAll(): array
+    {
         $query = "SELECT * FROM cpu_cooler";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
         $rows = $stmt->fetchAll();
         $cpuCoolers = [];
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $cpuCoolers[] = new CpuCooler(
                 $row['name'],
                 $row['producer'],
@@ -40,7 +43,6 @@ class CpuCoolerPdo extends PdoDb {
             );
         }
         return $cpuCoolers;
-
     }
 
     public function getById(int $id): ?CpuCooler
@@ -90,7 +92,6 @@ class CpuCoolerPdo extends PdoDb {
             ':id' => $item->getId()
         ]);
         return $stmt->rowCount() > 0;
-
     }
 
     public function delete($item): ?bool

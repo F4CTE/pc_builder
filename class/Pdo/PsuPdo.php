@@ -1,17 +1,19 @@
-<?php 
+<?php
+
 namespace App\Psu;
 
 use App\Parent\PdoDb;
 
-class PsuPdo extends PdoDb {
+class PsuPdo extends PdoDb
+{
 
-    public function createDbItem(array $arrayItem): ?Psu
+    public function createDbItem(array $arrayItem): Psu
     {
         $psu = new Psu(
             $arrayItem['name'],
             $arrayItem['producer'],
             $arrayItem['watt'],
-            array("pin_8" => $arrayItem['pin_8'] ?? 0, "pin_6" => $arrayItem['pin_6']?? 0),
+            array("pin_8" => $arrayItem['pin_8'] ?? 0, "pin_6" => $arrayItem['pin_6'] ?? 0),
             $arrayItem['size'] ?? null,
             $arrayItem['mpn'],
             $arrayItem['ean'],

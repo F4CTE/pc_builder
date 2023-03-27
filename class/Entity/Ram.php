@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Ram;
 
 use App\Parent\Part;
@@ -19,7 +20,7 @@ class Ram extends Part
         int $nbStick,
         ?string $mpn = null,
         ?int $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
         parent::__construct(

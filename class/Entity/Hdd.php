@@ -16,7 +16,7 @@ class Hdd extends Part
         int $rpm,
         ?string $mpn = null,
         ?int $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
         parent::__construct(
@@ -25,7 +25,7 @@ class Hdd extends Part
             $producer,
             $mpn,
             $ean,
-            $imageLink ?? parent::defaultImage,
+            $imageLink,
             $id,
         );
 

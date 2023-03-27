@@ -24,7 +24,7 @@ class Cpu extends Part
         ?int $tdp = null,
         ?string $mpn = null,
         ?string $ean = null,
-        ?string $imageLink = parent::defaultImage,
+        ?string $imageLink = null,
         ?int $id = null,
     ) {
         parent::__construct(
