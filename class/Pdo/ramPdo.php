@@ -2,12 +2,23 @@
 
 namespace App\Ram;
 
+use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
 class RamPdo extends PdoDb
 {
+    private const TABLE_NAME = 'rams';
+    private const UPDATE_QUERY = "UPDATE rams SET name = :name, producer = :producer, Type = :Type, capacity = :capacity, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
+    private const INSERT_QUERY = "INSERT INTO rams (name,producer,Type,capacity,clock,sticks,mpn,ean,imageLink) VALUES (:name,:producer,:Type,:capacity,:clock,:sticks,:mpn,:ean,:imageLink)";
+    
 
-    public function createDbItem(array $arrayItem): ram
+    public function __construct()
+    {
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
+    }
+
+
+    public function jsonToObject(array $arrayItem): ram
     {
         $ram = new Ram(
             $arrayItem['name'],
@@ -26,40 +37,12 @@ class RamPdo extends PdoDb
         return $ram;
     }
 
-    public function getAll(): array
+    public function rowToObject(array $row): DbItem
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM rams");
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-        $rams = [];
-        foreach ($rows as $row) {
-            $rams[] = new Ram(
-                $row['name'],
-                $row['producer'],
-                $row['Type'],
-                $row['capacity'],
-                $row['clock'],
-                $row['sticks'],
-                $row['mpn'],
-                $row['ean'],
-                $row['imageLink'],
-                $row['id']
-            );
-        }
-        return $rams;
-    }
-
-    public function getById(int $ramId): ?Ram
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM rams WHERE id=:id");
-        $stmt->execute([
-            ':id' => $ramId
-        ]);
-        $row = $stmt->fetch();
         return new Ram(
             $row['name'],
             $row['producer'],
-            $row['Type'],
+            $row['type'],
             $row['capacity'],
             $row['clock'],
             $row['sticks'],
@@ -70,54 +53,19 @@ class RamPdo extends PdoDb
         );
     }
 
-    public function create($ram): ?int
+    public function objectToRow($item): array
     {
-        $stmt = $this->pdo->prepare("INSERT INTO rams (name,producer,Type,capacity,clock,sticks,mpn,ean,imageLink) VALUES (:name,:producer,:Type,:capacity,:clock,:sticks,:mpn,:ean,:imageLink);");
-        $stmt->execute([
-            ':name' => $ram->getName(),
-            ':producer' => $ram->getProducer(),
-            ':Type' => $ram->getType(),
-            ':capacity' => $ram->getSize(),
-            ':clock' => $ram->getClock(),
-            ':sticks' => $ram->getSticks(),
-            ':mpn' => $ram->getMpn(),
-            ':ean' => $ram->getEan(),
-            ':imageLink' => $ram->getImageLink()
-        ]);
-        return $this->pdo->lastInsertId();
+        return [
+            'name' => $item->getName(),
+            'producer' => $item->getProducer(),
+            'type' => $item->getType(),
+            'capacity' => $item->getCapacity(),
+            'clock' => $item->getClock(),
+            'sticks' => $item->getSticks(),
+            'mpn' => $item->getMpn(),
+            'ean' => $item->getEan(),
+            'imageLink' => $item->getImageLink()
+        ];
     }
 
-    public function update($ram): bool
-    {
-        $stmt = $this->pdo->prepare("UPDATE rams SET name = :name, producer = :producer, Type = :Type, capacity = :capacity, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id");
-        $stmt->execute([
-            ':name' => $ram->getName(),
-            ':producer' => $ram->getProducer(),
-            ':Type' => $ram->getType(),
-            ':capacity' => $ram->getSize(),
-            ':clock' => $ram->getClock(),
-            ':sticks' => $ram->getSticks(),
-            ':mpn' => $ram->getMpn(),
-            ':ean' => $ram->getEan(),
-            ':imageLink' => $ram->getImageLink(),
-            ':id' => $ram->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function delete($ram): bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM rams WHERE id = :id");
-        $stmt->execute([
-            ':id' => $ram->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM rams");
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }

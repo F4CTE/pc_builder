@@ -15,11 +15,15 @@ class SinglePdo
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ];
 
-    private function __construct()
+    final private function __construct()
     {
     }
 
-    public static function getInstance()
+    final private function __clone()
+    {
+    }
+
+    final public static function getInstance()
     {
         if (self::$instance == null) {
             (new Dotenv())->loadEnv(__DIR__.'/../../.env');

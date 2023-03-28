@@ -6,32 +6,18 @@ use App\Parent\PdoDb;
 
 class UserPdo extends PdoDb
 {
+    private const TABLE_NAME = 'users';
+    private const UPDATE_QUERY = "UPDATE users SET username = :username, email = :email, password = :password, admin = :admin WHERE id = :id";
+    private const INSERT_QUERY = "INSERT INTO users (username,email,password,admin) VALUES (:username,:email,:password,:admin)";
 
-    public function getAll(): array
+    public function __construct()
     {
-        $query = "SELECT * FROM users";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-        $users = [];
-        foreach ($rows as $row) {
-            $users[] = new User(
-                $row['username'],
-                $row['email'],
-                $row['password'],
-                $row['admin'],
-                $row['id']
-            );
-        }
-        return $users;
+        parent::__construct(self::TABLE_NAME,self::UPDATE_QUERY,self::INSERT_QUERY);
     }
 
-    public function getById(int $id): ?User
+
+    public function rowToObject(array $row): User
     {
-        $query = "SELECT * FROM users WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch();
         return new User(
             $row['username'],
             $row['email'],
@@ -39,6 +25,16 @@ class UserPdo extends PdoDb
             $row['admin'],
             $row['id']
         );
+    }
+
+    public function objectToRow($item): array
+    {
+        return [
+            'username' => $item->getUsername(),
+            'email' => $item->getEmail(),
+            'password' => $item->getPassword(),
+            'admin' => $item->getAdmin(),
+        ];
     }
 
     public function getByEmail(String $email): User
@@ -48,13 +44,7 @@ class UserPdo extends PdoDb
             ':email' => $email
         ]);
         $row = $stmt->fetch();
-        return new User(
-            $row['username'],
-            $row['email'],
-            $row['password'],
-            $row['admin'],
-            $row['id']
-        );
+        return $this->rowToObject($row);
     }
 
     public function getByUsername(string $username): User
@@ -64,53 +54,8 @@ class UserPdo extends PdoDb
             ':username' => $username
         ]);
         $row = $stmt->fetch();
-        return new User(
-            $row['username'],
-            $row['email'],
-            $row['password'],
-            $row['admin'],
-            $row['id']
-        );
+        return $this->rowToObject($row);
     }
 
-    public function create($user): ?int
-    {
-        $stmt = $this->pdo->prepare("INSERT INTO users (username,email,password,admin) VALUES (:username,:email,:password,:admin);");
-        $stmt->execute([
-            ':username' => $user->getUsername(),
-            ':email' => $user->getEmail(),
-            ':password' => $user->getPassword(),
-            ':admin' => $user->isAdmin()
-        ]);
-        return $this->pdo->lastInsertId();
-    }
 
-    public function update($user): bool
-    {
-        $stmt = $this->pdo->prepare("UPDATE users SET username = :username, email = :email, password = :password, admin = :admin WHERE id = :id");
-        $stmt->execute([
-            ':username' => $user->getUsername(),
-            ':email' => $user->getEmail(),
-            ':password' => $user->getPassword(),
-            ':admin' => $user->isAdmin(),
-            ':id' => $user->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function delete($user): bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = :id");
-        $stmt->execute([
-            ':id' => $user->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM users");
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }

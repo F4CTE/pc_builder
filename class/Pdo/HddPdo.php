@@ -2,11 +2,23 @@
 
 namespace App\Hdd;
 
+use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
 class HddPdo extends PdoDb
 {
-    public function createDbItem(array $arrayItem): Hdd
+
+    private const TABLE_NAME = 'hdds';
+    private const UPDATE_QUERY = "UPDATE hdds SET name = :name, producer = :producer, capacity = :capacity, rpm = :rpm, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
+    private const INSERT_QUERY ="INSERT INTO hdds (name, producer, capacity, rpm, mpn, ean, imageLink) VALUES (:name, :producer, :capacity, :rpm, :mpn, :ean, :imageLink)";
+
+    public function __construct()
+    {
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
+    }
+
+
+    public function jsonToObject(array $arrayItem): Hdd
     {
         if ($arrayItem['producer'] == '3.5"' || $arrayItem['producer'] == '2.5"' || $arrayItem['producer'] == 'Link') {
 
@@ -24,38 +36,24 @@ class HddPdo extends PdoDb
             $arrayItem['image_url'] ?? null,
             null
         );
-        $hdd->save();
         return $hdd;
     }
 
-    public function getAll(): array
+    public function objectToRow($item): array
     {
-        $query = "SELECT * FROM hdds";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-        $hdds = [];
-        foreach ($rows as $row) {
-            $hdds[] = new Hdd(
-                $row['name'],
-                $row['producer'],
-                $row['capacity'],
-                $row['rpm'],
-                $row['mpn'],
-                $row['ean'],
-                $row['imageLink'],
-                $row['id']
-            );
-        }
-        return $hdds;
+        return[
+            ':name' => $item->getName(),
+            ':producer' => $item->getProducer(),
+            ':capacity' => $item->getSize(),
+            ':rpm' => $item->getRpm(),
+            ':mpn' => $item->getMpn(),
+            ':ean' => $item->getEan(),
+            ':imageLink' => $item->getImageLink()
+        ];
     }
 
-    public function getById(int $id): ?Hdd
+    public function rowToObject($row): Hdd
     {
-        $query = "SELECT * FROM hdds WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch();
         return new Hdd(
             $row['name'],
             $row['producer'],
@@ -68,52 +66,4 @@ class HddPdo extends PdoDb
         );
     }
 
-    public function create($item): ?int
-    {
-        $query = "INSERT INTO hdds (name, producer, capacity, rpm, mpn, ean, imageLink) VALUES (:name, :producer, :capacity, :rpm, :mpn, :ean, :imageLink)";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':name' => $item->getName(),
-            ':producer' => $item->getProducer(),
-            ':capacity' => $item->getSize(),
-            ':rpm' => $item->getRpm(),
-            ':mpn' => $item->getMpn(),
-            ':ean' => $item->getEan(),
-            ':imageLink' => $item->getImageLink()
-        ]);
-        return $this->pdo->lastInsertId();
-    }
-
-    public function update($item): ?bool
-    {
-        $query = "UPDATE hdds SET name = :name, producer = :producer, capacity = :capacity, rpm = :rpm, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':name' => $item->getName(),
-            ':producer' => $item->getProducer(),
-            ':capacity' => $item->getSize(),
-            ':rpm' => $item->getRpm(),
-            ':mpn' => $item->getMpn(),
-            ':ean' => $item->getEan(),
-            ':imageLink' => $item->getImageLink(),
-            ':id' => $item->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function delete($item): ?bool
-    {
-        $query = "DELETE FROM hdds WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $item->getId()]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $query = "DELETE FROM hdds";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }

@@ -2,12 +2,22 @@
 
 namespace App\CpuCooler;
 
+use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
 class CpuCoolerPdo extends PdoDb
 {
+    private const TABLE_NAME = 'cpu_cooler';
+    private const INSERT_QUERY = "INSERT INTO cpu_cooler (name, producer, height, sockets, mpn, ean, imageLink) VALUES (:name, :producer, :height, :sockets, :mpn, :ean, :imageLink)";
+    private const UPDATE_QUERY = "UPDATE cpu_cooler SET name = :name, producer = :producer, height = :height, sockets = :sockets, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
 
-    protected function createDbItem(array $arrayItem): CpuCooler
+
+    public function __construct()
+    {
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
+    }
+
+    protected function jsonToObject(array $arrayItem): CpuCooler
     {
         $cpuCooler = new CpuCooler(
             $arrayItem['name'],
@@ -19,38 +29,11 @@ class CpuCoolerPdo extends PdoDb
             $arrayItem['image_url'] ?? null,
             null
         );
-        $cpuCooler->save();
         return $cpuCooler;
     }
 
-    public function getAll(): array
+    public function rowToObject(array $row): DbItem
     {
-        $query = "SELECT * FROM cpu_cooler";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-        $cpuCoolers = [];
-        foreach ($rows as $row) {
-            $cpuCoolers[] = new CpuCooler(
-                $row['name'],
-                $row['producer'],
-                $row['height'],
-                json_decode($row['sockets']),
-                $row['mpn'],
-                $row['ean'],
-                $row['imageLink'],
-                $row['id']
-            );
-        }
-        return $cpuCoolers;
-    }
-
-    public function getById(int $id): ?CpuCooler
-    {
-        $query = "SELECT * FROM cpu_cooler WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch();
         return new CpuCooler(
             $row['name'],
             $row['producer'],
@@ -63,10 +46,9 @@ class CpuCoolerPdo extends PdoDb
         );
     }
 
-    public function create($item): ?int
+    public function objectToRow($item): array
     {
-        $stmt = $this->pdo->prepare("INSERT INTO cpu_cooler (name, producer, height, sockets, mpn, ean, imageLink) VALUES (:name, :producer, :height, :sockets, :mpn, :ean, :imageLink)");
-        $stmt->execute([
+        return [
             ':name' => $item->getName(),
             ':producer' => $item->getProducer(),
             ':height' => $item->getHeight(),
@@ -74,39 +56,7 @@ class CpuCoolerPdo extends PdoDb
             ':mpn' => $item->getMpn(),
             ':ean' => $item->getEan(),
             ':imageLink' => $item->getImageLink()
-        ]);
-        return $this->pdo->lastInsertId();
+        ];
     }
 
-    public function update($item): ?bool
-    {
-        $stmt = $this->pdo->prepare("UPDATE cpu_cooler SET name = :name, producer = :producer, height = :height, sockets = :sockets, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id");
-        $stmt->execute([
-            ':name' => $item->getName(),
-            ':producer' => $item->getProducer(),
-            ':height' => $item->getHeight(),
-            ':sockets' => json_encode($item->getSockets()),
-            ':mpn' => $item->getMpn(),
-            ':ean' => $item->getEan(),
-            ':imageLink' => $item->getImageLink(),
-            ':id' => $item->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function delete($item): ?bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = :id");
-        $stmt->execute([
-            ':id' => $item->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM cpu_cooler");
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }

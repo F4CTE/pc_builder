@@ -2,85 +2,41 @@
 
 namespace App\Build;
 
+use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
 class BuildPdo extends PdoDb
 {
-    protected function createDbItem(array $element): null
+    private const TABLE_NAME = 'builds';
+    private const UPDATE_QUERY = 'UPDATE builds SET user_id = :user_id, name = :name, parts = :parts WHERE id = :id';
+    private const INSERT_QUERY = 'INSERT INTO builds (user_id, name, parts) VALUES (:user_id, :name, :parts)';
+
+    public function __construct()
     {
-        return null;
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
     }
 
-    public function getAll(): array
-    {
-        $sql = 'SELECT * FROM builds';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $builds = $stmt->fetchAll();
-        $buildsArray = [];
-        foreach ($builds as $build) {
-            $buildsArray[] = new Build(
-                $build['user_id'],
-                $build['name'],
-                json_decode($build['parts']),
-                $build['id']
-            );
-        }
-        return $buildsArray;
-    }
 
-    public function getById(int $id): ?build
+    public function rowToObject(array $row): DbItem
     {
-        $sql = 'SELECT * FROM builds WHERE id = :id';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch();
         return new Build(
             $row['user_id'],
             $row['name'],
             json_decode($row['parts']),
             $row['id']
         );
+        
     }
 
-    public function create($item): ?int
+    public function objectToRow($item): array
     {
-        $sql = 'INSERT INTO builds (user_id, name, parts) VALUES (:user_id, :name, :parts)';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':user_id' => $item->getUserId(),
-            ':name' => $item->getName(),
-            ':parts' => json_encode($item->getParts())
-        ]);
-        return $this->pdo->lastInsertId();
+        return [
+            'user_id' => $item->getUserId(),
+            'name' => $item->getName(),
+            'parts' => json_encode($item->getParts()),
+            'id' => $item->getId()
+        ];
     }
 
-    public function update($item): ?bool
-    {
-        $sql = 'UPDATE builds SET user_id = :user_id, name = :name, parts = :parts WHERE id = :id';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':user_id' => $item->getUserId(),
-            ':name' => $item->getName(),
-            ':parts' => json_encode($item->getParts()),
-            ':id' => $item->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
 
-    public function delete($item): ?bool
-    {
-        $sql = 'DELETE FROM builds WHERE id = :id';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':id' => $item->getId()]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $sql = 'DELETE FROM builds';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }

@@ -2,11 +2,23 @@
 
 namespace App\Mb;
 
+use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
 class MbPdo extends PdoDb
 {
-    public function createDbItem(array $arrayItem): Mb
+
+    private const TABLE_NAME = 'motherboards';
+    private const UPDATE_QUERY = "UPDATE motherboards SET name = :name, producer = :producer, socket = :socket, chipset = :chipset, form = :form, memoryType = :memoryType, ports = :ports, memoryCapacity = :memoryCapacity, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
+    private const INSERT_QUERY = "INSERT INTO motherboards (name, producer, socket, chipset, form, memoryType, ports, memoryCapacity, mpn, ean, imageLink) VALUES (:name, :producer, :socket, :chipset, :form, :memoryType, :ports, :memoryCapacity, :mpn, :ean, :imageLink)";
+
+
+    public function __construct()
+    {
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
+    }
+
+    public function jsonToObject(array $arrayItem): Mb
     {
         $mb = new Mb(
             $arrayItem['name'],
@@ -31,16 +43,28 @@ class MbPdo extends PdoDb
             $arrayItem['selection2'] ?? null,
             null
         );
-        $mb->save();
         return $mb;
     }
 
-    public function getById(int $id): ?Mb
+    public function objectToRow($item): array
     {
-        $query = "SELECT * FROM motherboards WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch();
+        return [
+            ':name' => $item->getName(),
+            ':producer' => $item->getProducer(),
+            ':socket' => $item->getSocket(),
+            ':chipset' => $item->getChipset(),
+            ':form' => $item->getForm(),
+            ':memoryType' => $item->getMemoryType(),
+            ':ports' => json_encode($item->getPorts()),
+            ':memoryCapacity' => $item->getMemoryCapacity(),
+            ':mpn' => $item->getMpn(),
+            ':ean' => $item->getEan(),
+            ':imageLink' => $item->getImageLink()
+        ];
+    }
+
+    public function rowToObject(array $row): DbItem
+    {
         return new Mb(
             $row['name'],
             $row['producer'],
@@ -55,88 +79,7 @@ class MbPdo extends PdoDb
             $row['imageLink'],
             $row['id']
         );
+        
     }
 
-    public function getAll(): array
-    {
-        $query = "SELECT * FROM motherboards";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-        $motherboards = [];
-        foreach ($rows as $row) {
-            $motherboards[] = new Mb(
-                $row['name'],
-                $row['producer'],
-                $row['socket'],
-                $row['chipset'],
-                $row['form'],
-                $row['memoryType'],
-                json_decode($row['ports']),
-                $row['memoryCapacity'],
-                $row['mpn'],
-                $row['ean'],
-                $row['imageLink'],
-                $row['id']
-            );
-        }
-        return $motherboards;
-    }
-
-    public function create($item): ?int
-    {
-        $query = "INSERT INTO motherboards (name, producer, socket, chipset, form, memoryType, ports, memoryCapacity, mpn, ean, imageLink) VALUES (:name, :producer, :socket, :chipset, :form, :memoryType, :ports, :memoryCapacity, :mpn, :ean, :imageLink)";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':name' => $item->getName(),
-            ':producer' => $item->getProducer(),
-            ':socket' => $item->getSocket(),
-            ':chipset' => $item->getChipset(),
-            ':form' => $item->getForm(),
-            ':memoryType' => $item->getMemoryType(),
-            ':ports' => json_encode($item->getPorts()),
-            ':memoryCapacity' => $item->getMemoryCapacity(),
-            ':mpn' => $item->getMpn(),
-            ':ean' => $item->getEan(),
-            ':imageLink' => $item->getImageLink()
-        ]);
-        return $this->pdo->lastInsertId();
-    }
-
-    public function update($item): ?bool
-    {
-        $query = "UPDATE motherboards SET name = :name, producer = :producer, socket = :socket, chipset = :chipset, form = :form, memoryType = :memoryType, ports = :ports, memoryCapacity = :memoryCapacity, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([
-            ':name' => $item->getName(),
-            ':producer' => $item->getProducer(),
-            ':socket' => $item->getSocket(),
-            ':chipset' => $item->getChipset(),
-            ':form' => $item->getForm(),
-            ':memoryType' => $item->getMemoryType(),
-            ':ports' => json_encode($item->getPorts()),
-            ':memoryCapacity' => $item->getMemoryCapacity(),
-            ':mpn' => $item->getMpn(),
-            ':ean' => $item->getEan(),
-            ':imageLink' => $item->getImageLink(),
-            ':id' => $item->getId()
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function delete($item): ?bool
-    {
-        $query = "DELETE FROM motherboards WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':id' => $item->getId()]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public function deleteAll(): ?bool
-    {
-        $query = "DELETE FROM motherboards";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
 }
