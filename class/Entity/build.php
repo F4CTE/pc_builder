@@ -113,7 +113,7 @@ class build extends DbItem
             $this->parts[$key] = $part;
         }
     }
-    
+
     public function setCpuCooler(int|CpuCooler $cpuCoolerId): void
     {
         if ($cpuCoolerId instanceof CpuCooler) {
