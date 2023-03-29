@@ -52,8 +52,11 @@ class HddPdo extends PdoDb
         ];
     }
 
-    public function rowToObject($row): Hdd
-    {
+    public function rowToObject(array|bool $row): Hdd|bool
+    { 
+        if (!$row){
+            return $row;
+        } else 
         return new Hdd(
             $row['name'],
             $row['producer'],

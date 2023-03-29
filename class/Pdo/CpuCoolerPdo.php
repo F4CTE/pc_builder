@@ -32,8 +32,11 @@ class CpuCoolerPdo extends PdoDb
         return $cpuCooler;
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): CpuCooler|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new CpuCooler(
             $row['name'],
             $row['producer'],

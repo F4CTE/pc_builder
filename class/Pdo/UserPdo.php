@@ -16,8 +16,11 @@ class UserPdo extends PdoDb
     }
 
 
-    public function rowToObject(array $row): User
+    public function rowToObject(array|bool $row): User|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new User(
             $row['username'],
             $row['email'],
@@ -33,11 +36,11 @@ class UserPdo extends PdoDb
             'username' => $item->getUsername(),
             'email' => $item->getEmail(),
             'password' => $item->getPassword(),
-            'admin' => $item->getAdmin(),
+            'admin' => $item->isAdmin(),
         ];
     }
 
-    public function getByEmail(String $email): User
+    public function getByEmail(String $email): User|bool
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute([
@@ -47,7 +50,7 @@ class UserPdo extends PdoDb
         return $this->rowToObject($row);
     }
 
-    public function getByUsername(string $username): User
+    public function getByUsername(string $username): User|bool
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->execute([

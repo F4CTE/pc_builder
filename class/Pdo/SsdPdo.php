@@ -35,8 +35,11 @@ class SsdPdo extends PdoDb
         return $ssd;
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Ssd|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Ssd(
             $row['name'],
             $row['producer'],

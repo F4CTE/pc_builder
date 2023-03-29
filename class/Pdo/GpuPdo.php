@@ -37,8 +37,11 @@ class GpuPdo extends PdoDb
     }
 
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Gpu|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Gpu(
             $row['name'],
             $row['producer'],

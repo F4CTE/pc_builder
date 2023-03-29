@@ -37,8 +37,11 @@ class RamPdo extends PdoDb
         return $ram;
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Ram|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Ram(
             $row['name'],
             $row['producer'],

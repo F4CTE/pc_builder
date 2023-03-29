@@ -11,7 +11,7 @@ abstract class PdoDb
     private string $updateQuery ;
     private string $insertQuery ;
 
-    final public function __construct(string $table, string $updateQuery, string $insertQuery)
+    public function __construct(string $table, string $updateQuery, string $insertQuery)
     {
         $this->table = $table;
         $this->pdo = SinglePdo::getInstance();
@@ -64,7 +64,7 @@ abstract class PdoDb
         return $objects;
     }
 
-    abstract public function rowToObject(array $row): DbItem;
+    abstract public function rowToObject(array|bool $row): DbItem|bool;
 
     abstract public function objectToRow(DbItem $item): array;
 

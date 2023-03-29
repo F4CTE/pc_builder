@@ -34,8 +34,11 @@ class CpuPdo extends PdoDb
         return $cpu;
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Cpu|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Cpu(
             $row['name'],
             $row['producer'],

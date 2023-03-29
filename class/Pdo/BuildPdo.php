@@ -2,6 +2,7 @@
 
 namespace App\Build;
 
+use App\Chassis\Chassis;
 use App\Parent\DbItem;
 use App\Parent\PdoDb;
 
@@ -17,8 +18,11 @@ class BuildPdo extends PdoDb
     }
 
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Build|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Build(
             $row['user_id'],
             $row['name'],

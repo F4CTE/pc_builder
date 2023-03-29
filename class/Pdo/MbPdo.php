@@ -63,8 +63,11 @@ class MbPdo extends PdoDb
         ];
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): MB|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Mb(
             $row['name'],
             $row['producer'],

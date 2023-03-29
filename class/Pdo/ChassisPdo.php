@@ -49,8 +49,11 @@ class ChassisPdo extends PdoDb
         ];
     }
 
-    public function rowToObject($row): Chassis
+    public function rowToObject(array|bool $row): Chassis|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Chassis(
             $row['name'],
             $row['producer'],

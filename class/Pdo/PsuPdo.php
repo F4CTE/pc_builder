@@ -32,8 +32,11 @@ class PsuPdo extends PdoDb
         return $psu;
     }
 
-    public function rowToObject(array $row): DbItem
+    public function rowToObject(array|bool $row): Psu|bool
     {
+        if (!$row){
+            return $row;
+        } else 
         return new Psu(
             $row['name'],
             $row['producer'],
