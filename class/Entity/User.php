@@ -8,20 +8,20 @@ class user extends DbItem
 {
     private string $username;
     private string $email;
-    private string $password;
+    private ?string $password;
     private bool $admin;
 
     public function __construct(
         string $username,
         string $email,
-        string $password,
+        ?string $password = null,
         ?bool $admin = false,
         ?int $id = null,
     ) {
         parent::__construct($id);
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password;
+        $this->password = $password ?? null;
         $this->admin = $admin;
     }
 
@@ -75,10 +75,11 @@ class user extends DbItem
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(string $password): User
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
         $this->save();
+        return $this;
     }
 
     public function isPasswordCorrect(string $password): bool

@@ -19,6 +19,12 @@ require_once __DIR__ . '/head.php';
                         <?php unset($_SESSION['error']); ?>
                     </div>
                     <?php endif; ?>
+                    <?php if(isset($_SESSION['message'])): ?>
+                    <div class="alert alert-success">
+                        <?php echo $_SESSION['message']; ?>
+                        <?php unset($_SESSION['message']); ?>
+                    </div>
+                    <?php endif; ?>
                     <form method="POST" action="login.php">
                         <div class="form-floating mb-3">
                             <input type="text" name="username_or_email" id="username_or_email" class="form-control" placeholder="Username or Email" required autofocus>
