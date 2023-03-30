@@ -41,7 +41,7 @@ class CpuCoolerPdo extends PdoDb
             $row['name'],
             $row['producer'],
             $row['height'],
-            json_decode($row['sockets']),
+            json_decode($row['sockets'], true),
             $row['mpn'],
             $row['ean'],
             $row['imageLink'],

@@ -2,8 +2,9 @@
 
 namespace App\Cpu;
 
-use App\Parent\DbItem;
+use App\Build\build;
 use App\Parent\PdoDb;
+use PDO;
 
 class CpuPdo extends PdoDb
 {
@@ -14,7 +15,7 @@ class CpuPdo extends PdoDb
     {
         parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
     }
-    
+
     public function jsonToObject(array $arrayItem): Cpu
     {
         $cpu = new Cpu(
@@ -36,23 +37,23 @@ class CpuPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Cpu|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Cpu(
-            $row['name'],
-            $row['producer'],
-            floatval($row['baseClock']),
-            floatval($row['turboClock']),
-            intval($row['cores']),
-            intval($row['threads']),
-            $row['socket'],
-            intval($row['tdp']),
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            intval($row['id']),
-        );
+        } else
+            return new Cpu(
+                $row['name'],
+                $row['producer'],
+                floatval($row['baseClock']),
+                floatval($row['turboClock']),
+                intval($row['cores']),
+                intval($row['threads']),
+                $row['socket'],
+                intval($row['tdp']),
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                intval($row['id']),
+            );
     }
 
     public function objectToRow($item): array
@@ -72,4 +73,17 @@ class CpuPdo extends PdoDb
         ];
     }
 
+    public function getCompatibleItems(Build $build): bool|array|null
+    {   
+        if(!$build) {
+            return $this->getAll();
+        }
+        $motherboard = $build->getIndividualPart('motherboard');
+        $socket = $motherboard->getSocket();
+        $query = "SELECT * FROM cpus WHERE socket = :socket";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':socket' => $socket]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

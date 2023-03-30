@@ -41,7 +41,7 @@ class PsuPdo extends PdoDb
             $row['name'],
             $row['producer'],
             $row['power'],
-            json_decode($row['connectics']),
+            json_decode($row['connectics'], true),
             $row['format'],
             $row['mpn'],
             $row['ean'],

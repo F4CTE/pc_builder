@@ -2,15 +2,17 @@
 
 namespace App\Ram;
 
-use App\Parent\DbItem;
 use App\Parent\PdoDb;
+use PDO;
+use App\Build\Build;
+use App\Mb\Mb;
 
 class RamPdo extends PdoDb
 {
     private const TABLE_NAME = 'rams';
     private const UPDATE_QUERY = "UPDATE rams SET name = :name, producer = :producer, Type = :Type, capacity = :capacity, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
     private const INSERT_QUERY = "INSERT INTO rams (name,producer,Type,capacity,clock,sticks,mpn,ean,imageLink) VALUES (:name,:producer,:Type,:capacity,:clock,:sticks,:mpn,:ean,:imageLink)";
-    
+
 
     public function __construct()
     {
@@ -39,21 +41,21 @@ class RamPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Ram|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Ram(
-            $row['name'],
-            $row['producer'],
-            $row['type'],
-            $row['capacity'],
-            $row['clock'],
-            $row['sticks'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new Ram(
+                $row['name'],
+                $row['producer'],
+                $row['type'],
+                $row['capacity'],
+                $row['clock'],
+                $row['sticks'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -71,4 +73,16 @@ class RamPdo extends PdoDb
         ];
     }
 
+    public function getCompatibleItems(Build $build): bool|array|null
+    {
+        if (!$build) {
+            return $this->getAll();
+        }
+        $motherboard = $build->getIndividualPart('motherboard');
+        $socket = $motherboard->getMemoryType();
+        $query = "SELECT * FROM rams WHERE Type LIKE :type";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':type' => $socket . "%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

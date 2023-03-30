@@ -26,7 +26,7 @@ class BuildPdo extends PdoDb
         return new Build(
             $row['user_id'],
             $row['name'],
-            json_decode($row['parts']),
+            json_decode($row['parts'],true),
             $row['id']
         );
         
@@ -41,6 +41,5 @@ class BuildPdo extends PdoDb
             'id' => $item->getId()
         ];
     }
-
 
 }

@@ -60,5 +60,4 @@ class UserPdo extends PdoDb
         return $this->rowToObject($row);
     }
 
-
 }

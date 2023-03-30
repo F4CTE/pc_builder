@@ -75,7 +75,7 @@ class MbPdo extends PdoDb
             $row['chipset'],
             $row['form'],
             $row['memoryType'],
-            json_decode($row['ports']),
+            json_decode($row['ports'], true),
             $row['memoryCapacity'],
             $row['mpn'],
             $row['ean'],

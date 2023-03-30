@@ -2,14 +2,15 @@
 
 namespace App\Parent;
 
+use App\Build\build;
 use PDO;
 
 abstract class PdoDb
 {
     protected ?PDO $pdo = null;
     protected ?string $table = null;
-    private string $updateQuery ;
-    private string $insertQuery ;
+    private string $updateQuery;
+    private string $insertQuery;
 
     public function __construct(string $table, string $updateQuery, string $insertQuery)
     {
@@ -48,7 +49,7 @@ abstract class PdoDb
 
     final public function getById(int $id): ?dbitem
     {
-        $sql = 'SELECT * FROM '.$this->table.' WHERE id = :id';
+        $sql = 'SELECT * FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch();
@@ -69,7 +70,7 @@ abstract class PdoDb
     abstract public function objectToRow(DbItem $item): array;
 
     final public function create($item): ?int
-    {        
+    {
         $stmt = $this->pdo->prepare($this->insertQuery);
         $stmt->execute($this->objectToRow($item));
         return $this->pdo->lastInsertId();
@@ -78,7 +79,7 @@ abstract class PdoDb
     final public function update($item): ?bool
     {
         $stmt = $this->pdo->prepare($this->updateQuery);
-        $stmt->execute($this->objectToRow($item)+[':id' => $item->getId()]);
+        $stmt->execute($this->objectToRow($item) + [':id' => $item->getId()]);
         return $stmt->rowCount() > 0;
     }
 
@@ -94,8 +95,13 @@ abstract class PdoDb
 
     final public function deleteAll(): ?bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM ". $this->table);
+        $stmt = $this->pdo->prepare("DELETE FROM " . $this->table);
         $stmt->execute();
         return $stmt->rowCount() > 0;
+    }
+
+    public function getCompatibleItems(Build $item): bool|array|null
+    {
+        return null;
     }
 }
