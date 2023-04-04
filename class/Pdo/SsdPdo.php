@@ -71,31 +71,16 @@ class SsdPdo extends PartPdo
             ':imageLink' => $item->getImageLink()
         ];
     }
-    public function getCompatibilityQuery(build $build): null|array
+    public function getCompatibilityQuery(Build $build): ?array
     {
-        if(!$build){
-            return [];
-        }
-        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
         $motherboard = $build->getPart('motherboard');
-        if($motherboard instanceof Mb){
-            if($motherboard->getM2Count() > 0)
-            $query = $this->pdo->prepare($baseQuery);
-    
-            $query->execute();
-    
-            $result = $query->fetchAll();
-    
-            $compatibleParts = [];
-    
-            foreach ($result as $row) {
-                $compatibleParts[] = $this->rowToObject($row);
+
+        if ($motherboard instanceof Mb) {
+            if ($motherboard->getM2Count() > 0) {
+                return [];
             }
-    
-            return $compatibleParts;
-
         }
-        return [];
-    }
 
+        return null;
+    }
 }

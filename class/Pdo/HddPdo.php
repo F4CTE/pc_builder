@@ -70,14 +70,16 @@ class HddPdo extends PartPdo
         );
     }
 
-    protected function getCompatibilityQuery(build $build): null|array
+    protected function getCompatibilityQuery(Build $build): ?array
     {
         $motherboard = $build->getPart('motherboard');
-        if($motherboard instanceof Mb){
-            if($motherboard->getSata() > 0){
+    
+        if ($motherboard instanceof Mb) {
+            if ($motherboard->getSata() > 0) {
                 return [];
             }
         }
+    
         return null;
     }
 

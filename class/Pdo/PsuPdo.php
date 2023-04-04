@@ -65,30 +65,29 @@ class PsuPdo extends PartPdo
         ];
     }
 
-
+    
     public function getCompatibilityQuery(Build $build): array
     {
-
-        $chassis= $build->getPart('chassis');
+        $chassis = $build->getPart('chassis');
         $gpus = $build->getPart('gpus');
-        $conditions=[];
-        if($chassis instanceof Chassis){
-            $conditions[] = 'format = \''.$chassis->getPsuFormat().'\'';
+        $conditions = [];
+    
+        if ($chassis instanceof Chassis) {
+            $conditions[] = 'format = \'' . $chassis->getPsuFormat() . '\'';
         }
-
-        if(count($gpus)  > 0){
+    
+        if (count($gpus) > 0) {
             $min6Pin = 0;
             $min8Pin = 0;
-            foreach($gpus as $gpu){
+            foreach ($gpus as $gpu) {
                 $min6Pin += $gpu->getPowerSupply()['pin_6'];
                 $min8Pin += $gpu->getPowerSupply()['pin_8'];
             }
-            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_6\') >= \''.$min6Pin.'\'';
-            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_8\') >= \''.$min8Pin.'\'';
+            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_6\') >= \'' . $min6Pin . '\'';
+            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_8\') >= \'' . $min8Pin . '\'';
         }
-
+    
         return $conditions;
-
-
     }
+    
 }

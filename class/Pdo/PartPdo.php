@@ -11,30 +11,30 @@ abstract class PartPdo extends PdoDb {
         parent::__construct($tableName, $updateQuery, $insertQuery);
     }
 
-    final public function getCompatibleParts(build $build): array{
-
-        if(!$build){
+    final public function getCompatibleParts(Build $build): array
+    {
+        if (!$build) {
             return [];
         }
-
+    
         $conditions = $this->getCompatibilityQuery($build);
-
+    
         if (count($conditions) > 0) {
             $this->baseQuery .= " WHERE " . implode(' AND ', $conditions);
         }
-
+    
         $query = $this->pdo->prepare($this->baseQuery);
-
+    
         $query->execute();
-
+    
         $result = $query->fetchAll();
-
+    
         $compatibleParts = [];
-
+    
         foreach ($result as $row) {
             $compatibleParts[] = $this->rowToObject($row);
         }
-
+    
         return $compatibleParts;
     }
 

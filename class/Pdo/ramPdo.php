@@ -73,14 +73,17 @@ class RamPdo extends PartPdo
         ];
     }
 
-    public function getCompatibilityQuery(Build $build = null): null|array
+    public function getCompatibilityQuery(?Build $build): ?array
     {
+    
         $motherboard = $build->getPart('motherboard');
         $conditions = [];
+    
         if ($motherboard instanceof Mb) {
             $memType = $motherboard->getMemoryType();
-            $conditions[] = "Type LIKE \'".$memType.'\'';
+            $conditions[] = "Type LIKE '" . $memType . "'";
         }
+        
         return $conditions;
     }
 }

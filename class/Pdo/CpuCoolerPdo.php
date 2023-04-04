@@ -65,20 +65,20 @@ class CpuCoolerPdo extends PartPdo
         ];
     }
 
-    protected function getCompatibilityQuery(build $build): null|array
-    {
-        $conditions = [];
+    protected function getCompatibilityQuery(Build $build): ?array
+{
+    $conditions = [];
 
-        $mb = $build->getPart('motherboard');
-        $chassis = $build->getPart('chassis');
+    $mb = $build->getPart('motherboard');
+    $chassis = $build->getPart('chassis');
 
-        if ($mb instanceof Mb) {
-            $conditions[] = "sockets LIKE '%\"" . $mb->getSocket() . "\"%'";
-        }
-        if ($chassis instanceof Chassis) {
-            $conditions[] = "height <= " . $chassis->getMaxCpuCoolerHeight();
-        }
-
-        return $conditions;
+    if ($mb instanceof Mb) {
+        $conditions[] = "sockets LIKE '%\"" . $mb->getSocket() . "\"%'";
     }
+    if ($chassis instanceof Chassis) {
+        $conditions[] = "height <= " . $chassis->getMaxCpuCoolerHeight();
+    }
+
+    return $conditions;
+}
 }
