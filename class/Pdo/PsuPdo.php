@@ -66,13 +66,8 @@ class PsuPdo extends PartPdo
     }
 
 
-    public function getCompatibleParts(Build $build): array
+    public function getCompatibilityQuery(Build $build): array
     {
-        if(!$build){
-            return[];
-        }
-
-        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
 
         $chassis= $build->getPart('chassis');
         $gpus = $build->getPart('gpus');
@@ -92,23 +87,7 @@ class PsuPdo extends PartPdo
             $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_8\') >= \''.$min8Pin.'\'';
         }
 
-        if (count($conditions) > 0) {
-            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $query = $this->pdo->prepare($baseQuery);
-
-        $query->execute();
-
-        $result = $query->fetchAll();
-
-        $compatibleParts = [];
-
-        foreach ($result as $row) {
-            $compatibleParts[] = $this->rowToObject($row);
-        }
-
-        return $compatibleParts;
+        return $conditions;
 
 
     }

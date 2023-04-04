@@ -70,31 +70,15 @@ class HddPdo extends PartPdo
         );
     }
 
-    public function getCompatibleParts(build $build): array
+    protected function getCompatibilityQuery(build $build): null|array
     {
-        if(!$build){
-            return [];
-        }
-        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
         $motherboard = $build->getPart('motherboard');
         if($motherboard instanceof Mb){
-    
-            $query = $this->pdo->prepare($baseQuery);
-    
-            $query->execute();
-    
-            $result = $query->fetchAll();
-    
-            $compatibleParts = [];
-    
-            foreach ($result as $row) {
-                $compatibleParts[] = $this->rowToObject($row);
+            if($motherboard->getSata() > 0){
+                return [];
             }
-    
-            return $compatibleParts;
-
         }
-        return [];
+        return null;
     }
 
 }

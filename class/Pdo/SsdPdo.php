@@ -71,7 +71,7 @@ class SsdPdo extends PartPdo
             ':imageLink' => $item->getImageLink()
         ];
     }
-    public function getCompatibleParts(build $build): array
+    public function getCompatibilityQuery(build $build): null|array
     {
         if(!$build){
             return [];

@@ -87,13 +87,9 @@ class MbPdo extends PartPdo
             );
     }
 
-    public function getCompatibleParts(build $build): array
+    public function getCompatibilityQuery(build $build): array
     {
-        if (!$build instanceof Build) {
-            return $this->getAll();
-        }
 
-        $baseQuery = "SELECT * FROM " . self::TABLE_NAME;
         $conditions = [];
 
         $chassis = $build->getPart('case');
@@ -143,22 +139,7 @@ class MbPdo extends PartPdo
         if ($nbGpu > 0) {
             $conditions[] = '(JSON_EXTRACT(ports, \'$.pcie3X16\') + JSON_EXTRACT(ports, \'$.pcie4X16\')) >= ' . $nbGpu;
         }
-        if (count($conditions) > 0) {
-            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
-        }
 
-        $query = $this->pdo->prepare($baseQuery);
-
-        $query->execute();
-
-        $result = $query->fetchAll();
-
-        $compatibleParts = [];
-
-        foreach ($result as $row) {
-            $compatibleParts[] = $this->rowToObject($row);
-        }
-
-        return $compatibleParts;
+        return $conditions;
     }
 }

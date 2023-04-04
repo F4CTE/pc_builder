@@ -65,13 +65,8 @@ class CpuCoolerPdo extends PartPdo
         ];
     }
 
-    public function getCompatibleParts(build $build): array
+    protected function getCompatibilityQuery(build $build): null|array
     {
-        if (!$build) {
-            return [];
-        }
-
-        $baseQuery = "SELECT * FROM " . self::TABLE_NAME;
         $conditions = [];
 
         $mb = $build->getPart('motherboard');
@@ -84,22 +79,6 @@ class CpuCoolerPdo extends PartPdo
             $conditions[] = "height <= " . $chassis->getMaxCpuCoolerHeight();
         }
 
-        if (count($conditions) > 0) {
-            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $query = $this->pdo->prepare($baseQuery);
-
-        $query->execute();
-
-        $result = $query->fetchAll();
-
-        $compatibleParts = [];
-
-        foreach ($result as $row) {
-            $compatibleParts[] = $this->rowToObject($row);
-        }
-
-        return $compatibleParts;
+        return $conditions;
     }
 }

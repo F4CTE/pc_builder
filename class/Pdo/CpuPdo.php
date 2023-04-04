@@ -74,37 +74,14 @@ class CpuPdo extends PartPdo
         ];
     }
 
-    public function getCompatibleParts(Build $build = null): array
+    protected function getCompatibilityQuery(Build $build = null): null|array
     {
-
-        if(!$build){
-            return [];
-        }
-        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
         $conditions =[];
         $motherboard = $build->getPart('motherboard');
         if ($motherboard instanceof Mb) {
             $conditions[] = 'socket = \''.$motherboard->getSocket().'\'';
         }
-        if (count($conditions) > 0) {
-            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $query = $this->pdo->prepare($baseQuery);
-
-        $query->execute();
-
-        $result = $query->fetchAll();
-
-        $compatibleParts = [];
-
-        foreach ($result as $row) {
-            $compatibleParts[] = $this->rowToObject($row);
-        }
-
-        return $compatibleParts;
-
-
+        return $conditions;
 
     }
 }

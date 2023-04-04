@@ -73,23 +73,14 @@ class RamPdo extends PartPdo
         ];
     }
 
-    public function getCompatibleParts(Build $build = null): array
+    public function getCompatibilityQuery(Build $build = null): null|array
     {
-        if (!$build instanceof Build || is_null($build->getPart('motherboard',true))) {
-            return $this->getAll();
-        }
         $motherboard = $build->getPart('motherboard');
-        if (!$motherboard instanceof Mb) {
-            return [];
+        $conditions = [];
+        if ($motherboard instanceof Mb) {
+            $memType = $motherboard->getMemoryType();
+            $conditions[] = "Type LIKE \'".$memType.'\'';
         }
-        $memType = $motherboard->getMemoryType();
-        $query = "SELECT * FROM ".self::TABLE_NAME." WHERE Type LIKE :type";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':type' => $memType . "%"]);
-        $result = [];
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $result[] = $this->rowToObject($row);
-        };
-        return $result;
+        return $conditions;
     }
 }

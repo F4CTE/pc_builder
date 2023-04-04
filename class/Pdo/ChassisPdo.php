@@ -71,12 +71,8 @@ class ChassisPdo extends PartPdo
             );
     }
 
-    public function getCompatibleParts(build $build): array
+    protected function getCompatibilityQuery(build $build): null|array
     {
-        if(!$build){
-            return [];
-        }
-        $baseQuery = 'SELECT * FROM ' . self::TABLE_NAME;
 
         $conditions = [];
 
@@ -110,32 +106,15 @@ class ChassisPdo extends PartPdo
                     $maxGpuSize = $value;
                 }
             }
-            $conditions[] = 'maxGpuSize >= '.$maxGpuSize;
+            $conditions[] = 'maxGpuSize >= ' . $maxGpuSize;
         }
 
 
         $psu = $build->getPart('psu');
-        if($psu instanceof Psu) {
-            $conditions[] = 'psuFormat = \''.$psu->getFormat().'\'';
+        if ($psu instanceof Psu) {
+            $conditions[] = 'psuFormat = \'' . $psu->getFormat() . '\'';
         }
 
-        if (count($conditions) > 0) {
-            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $query = $this->pdo->prepare($baseQuery);
-
-        $query->execute();
-
-        $result = $query->fetchAll();
-
-        $compatibleParts = [];
-
-        foreach ($result as $row) {
-            $compatibleParts[] = $this->rowToObject($row);
-        }
-
-        return $compatibleParts;
+        return $conditions;
     }
-
 }
