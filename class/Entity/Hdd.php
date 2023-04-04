@@ -62,4 +62,9 @@ class Hdd extends Part
     {
         return $this->size;
     }
+
+    public function setRpm(int $rpm) {
+        $this->rpm = $rpm;
+        return $this;
+    }
 }

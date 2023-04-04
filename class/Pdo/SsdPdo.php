@@ -2,11 +2,12 @@
 
 namespace App\Ssd;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
 
-class SsdPdo extends PdoDb
-{  
+class SsdPdo extends PartPdo
+{
     private const TABLE_NAME = 'ssds';
     private const UPDATE_QUERY = "UPDATE ssds SET name = :name, producer = :producer, form = :form, protocol = :protocol, storage = :storage, controller = :controller, nand = :nand, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
     private const INSERT_QUERY = "INSERT INTO ssds (name, producer, form, protocol, capacity, controller, nand, mpn, ean, imageLink) VALUES (:name, :producer, :form, :protocol, :capacity, :controller, :nand, :mpn, :ean, :imageLink)";
@@ -37,25 +38,25 @@ class SsdPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Ssd|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Ssd(
-            $row['name'],
-            $row['producer'],
-            $row['form'],
-            $row['protocol'],
-            $row['storage'],
-            $row['controller'],
-            $row['nand'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new Ssd(
+                $row['name'],
+                $row['producer'],
+                $row['form'],
+                $row['protocol'],
+                $row['storage'],
+                $row['controller'],
+                $row['nand'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
-    public function objectToRow( $item): array
+    public function objectToRow($item): array
     {
         return [
             ':name' => $item->getName(),
@@ -69,6 +70,32 @@ class SsdPdo extends PdoDb
             ':ean' => $item->getEan(),
             ':imageLink' => $item->getImageLink()
         ];
+    }
+    public function getCompatibleParts(build $build): array
+    {
+        if(!$build){
+            return [];
+        }
+        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
+        $motherboard = $build->getPart('motherboard');
+        if($motherboard instanceof Mb){
+            if($motherboard->getM2Count() > 0)
+            $query = $this->pdo->prepare($baseQuery);
+    
+            $query->execute();
+    
+            $result = $query->fetchAll();
+    
+            $compatibleParts = [];
+    
+            foreach ($result as $row) {
+                $compatibleParts[] = $this->rowToObject($row);
+            }
+    
+            return $compatibleParts;
+
+        }
+        return [];
     }
 
 }

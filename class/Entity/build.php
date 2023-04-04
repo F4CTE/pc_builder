@@ -1,25 +1,19 @@
 <?php
 
 namespace App\Build;
-
-use App\Chassis\Chassis;
 use App\Chassis\ChassisPdo;
-use App\Cpu\Cpu;
 use App\Cpu\CpuPdo;
-use App\CpuCooler\CpuCooler;
 use App\CpuCooler\CpuCoolerPdo;
 use App\Gpu\GpuPdo;
 use App\Hdd\HddPdo;
-use App\Mb\Mb;
 use App\Mb\MbPdo;
 use App\Parent\DbItem;
 use App\Parent\Part;
-use App\Psu\Psu;
 use App\Psu\PsuPdo;
 use App\Ram\RamPdo;
 use App\Ssd\SsdPdo;
 
-class build extends DbItem
+class Build extends DbItem
 {
     private ?int $userId = null;
     private ?string $name = null;
@@ -77,10 +71,6 @@ class build extends DbItem
         return $this->name;
     }
 
-    public function getParts(): array
-    {
-        return $this->parts;
-    }
 
     public function setUserId(int $userId): void
     {
@@ -113,43 +103,66 @@ class build extends DbItem
         }
     }
 
-    /*
-    * @return Cpu|CpuCooler|Mb|Psu|Chassis|null|Ssd[]|Hdd[]|Ram[]|Gpu[]
-    */
-    public function getIndividualPart(string $key): Cpu|CpuCooler|Mb|Psu|Chassis|array|null
+    
+    public function getPart(string $key, bool $id = false): Part|array|null|int
     {
         if (!array_key_exists($key, $this->parts) || $this->parts[$key] === null) {
             return null;
         }
-
         switch ($key) {
             case 'cpu':
-                return (new CpuPdo())->getById($this->parts['cpu']);
+                if ($id) {
+                    return $this->parts['cpu'];
+                } else
+                    return (new CpuPdo())->getById($this->parts['cpu']);
                 break;
             case 'cpuCooler':
+                if ($id) {
+                    return $this->parts['cpuCooler'];
+                } else
                 return (new CpuCoolerPdo())->getById($this->parts['cpuCooler']);
                 break;
             case 'motherboard':
+                if ($id) {
+                    return $this->parts['motherboard'];
+                } else
                 return (new MbPdo())->getById($this->parts['motherboard']);
                 break;
             case 'psu':
+                if ($id) {
+                    return $this->parts['psu'];
+                } else
                 return (new PsuPdo())->getById($this->parts['psu']);
                 break;
             case 'case':
+                if ($id) {
+                    return $this->parts['case'];
+                } else
                 return (new ChassisPdo())->getById($this->parts['case']);
                 break;
             case 'rams':
+                if ($id) {
+                    return $this->parts['rams'];
+                } else
                 return (new RamPdo())->getByIds($this->parts['rams']);
                 break;
             case 'gpus':
+                if ($id) {
+                    return $this->parts['gpus'];
+                } else
                 return (new GpuPdo())->getByIds($this->parts['gpus']);
                 break;
             case 'hdds':
+                if ($id) {
+                    return $this->parts['hdds'];
+                } else
                 return (new HddPdo())->getByIds($this->parts['hdds']);
                 break;
             case 'ssds':
+                if ($id) {
+                    return $this->parts['ssds'];
+                } else
                 return (new SsdPdo())->getByIds($this->parts['ssds']);
-
             default:
                 return null;
                 break;

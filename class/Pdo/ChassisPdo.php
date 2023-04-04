@@ -2,15 +2,18 @@
 
 namespace App\Chassis;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\CpuCooler\CpuCooler;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
+use App\Psu\Psu;
 
-class ChassisPdo extends PdoDb
+class ChassisPdo extends PartPdo
 {
     private const TABLE_NAME = 'chassis';
     private const UPDATE_QUERY = 'UPDATE chassis SET name = :name, producer = :producer, mbFormat = :mbFormat, psuFormat = :psuFormat, maxGpuSize = :maxGpuSize, maxCpuCoolerHeight = :maxCpuCoolerHeight, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id';
     private const INSERT_QUERY = 'INSERT INTO chassis (name, producer, mbFormat, psuFormat, maxGpuSize, maxCpuCoolerHeight, mpn, ean, imageLink) VALUES (:name, :producer, :mbFormat, :psuFormat, :maxGpuSize, :maxCpuCoolerHeight, :mpn, :ean, :imageLink)';
-    
+
     public function __construct()
     {
         parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
@@ -51,21 +54,88 @@ class ChassisPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Chassis|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Chassis(
-            $row['name'],
-            $row['producer'],
-            $row['mbFormat'],
-            $row['psuFormat'] ?? $row['mbFormat'],
-            $row['maxGpuSize'],
-            $row['maxCpuCoolerHeight'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new Chassis(
+                $row['name'],
+                $row['producer'],
+                $row['mbFormat'],
+                $row['psuFormat'] ?? $row['mbFormat'],
+                $row['maxGpuSize'],
+                $row['maxCpuCoolerHeight'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
+    }
+
+    public function getCompatibleParts(build $build): array
+    {
+        if(!$build){
+            return [];
+        }
+        $baseQuery = 'SELECT * FROM ' . self::TABLE_NAME;
+
+        $conditions = [];
+
+        $cpuCooler = $build->getPart('cpuCooler');
+        if ($cpuCooler instanceof CpuCooler) {
+            $conditions[] = 'maxCpuCoolerHeight >= ' . $cpuCooler->getHeight();
+        }
+
+        $mbFormat = $build->getPart('motherboard');
+        if ($mbFormat instanceof Mb) {
+            switch ($mbFormat->getForm()) {
+                case 'Mini-ITX':
+                    $format[] = '\'Mini-ITX\'';
+                case 'Micro-ATX':
+                    $format[] = '\'Micro-ATX\'';
+                case 'ATX':
+                    $format[] = '\'ATX\'';
+                case 'E-ATX':
+                    $format[] = '\'E-ATX`\'';
+                    break;
+            }
+            $conditions[] = 'mbFormat IN (' . implode(',', $format) . ')';
+        }
+
+        $gpus = $build->getPart('gpus');
+        if (count($gpus) > 0) {
+            $maxGpuSize = null;
+            foreach ($gpus as $object) {
+                $value = $object->getLength();
+                if ($maxGpuSize === null || $value > $maxGpuSize) {
+                    $maxGpuSize = $value;
+                }
+            }
+            $conditions[] = 'maxGpuSize >= '.$maxGpuSize;
+        }
+
+
+        $psu = $build->getPart('psu');
+        if($psu instanceof Psu) {
+            $conditions[] = 'psuFormat = \''.$psu->getFormat().'\'';
+        }
+
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
     }
 
 }

@@ -2,11 +2,14 @@
 
 namespace App\Gpu;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\Chassis\Chassis;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
+use App\Psu\Psu;
 
-class GpuPdo extends PdoDb
-{   
+class GpuPdo extends PartPdo
+{
     private const TABLE_NAME = 'gpus';
     private const UPDATE_QUERY = "UPDATE gpus SET name = :name, producer = :producer, boostClock = :boostClock, vram = :vram, memoryClock = :memoryClock, length = :length, powerSupply = :powerSupply, tdp = :tdp, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
     private const INSERT_QUERY = "INSERT INTO gpus (name, producer, boostClock, vram, memoryClock, length, powerSupply, tdp, mpn, ean, imageLink) VALUES (:name, :producer, :boostClock, :vram, :memoryClock, :length, :powerSupply, :tdp, :mpn, :ean, :imageLink)";
@@ -39,23 +42,23 @@ class GpuPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Gpu|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Gpu(
-            $row['name'],
-            $row['producer'],
-            $row['boostClock'],
-            $row['vram'],
-            $row['memoryClock'],
-            $row['length'],
-            json_decode($row['powerSupply'], true),
-            $row['tdp'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new Gpu(
+                $row['name'],
+                $row['producer'],
+                $row['boostClock'],
+                $row['vram'],
+                $row['memoryClock'],
+                $row['length'],
+                json_decode($row['powerSupply'], true),
+                $row['tdp'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -75,4 +78,50 @@ class GpuPdo extends PdoDb
         ];
     }
 
+    public function getCompatibleParts(build $build): array
+    {
+        if (!$build) {
+            return [];
+        }
+        $baseQuery = 'SELECT * FROM ' . self::TABLE_NAME;
+
+        $chassis = $build->getPart('chassis');
+        $motherboard = $build->getPart('motherboard');
+        $psu = $build->getPart('psu');
+        $conditions = [];
+
+        if ($motherboard instanceof Mb) {
+            if ($motherboard->getPcie3X16() + $motherboard->getPcie4X16() < 1) {
+                return [];
+            }
+        }
+        
+        if ($chassis instanceof Chassis) {
+            $conditions[] = 'maxGpuSize >= ' . $chassis->getMaxGpuSize();
+        }
+
+        if($psu instanceof Psu) {
+            $conditions[] = 'JSON_EXTRACT(PowerSupply, \'$.pin_8\') <= \''.$psu->getEightPin().'\'';
+            $conditions[] = 'JSON_EXTRACT(powerSupply, \'$.pin_6\') <= \''.$psu->getsixPin().'\'';
+        }
+
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
+
+    }
 }

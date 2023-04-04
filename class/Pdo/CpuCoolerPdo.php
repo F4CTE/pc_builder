@@ -2,10 +2,13 @@
 
 namespace App\CpuCooler;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\Chassis\Chassis;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
 
-class CpuCoolerPdo extends PdoDb
+
+class CpuCoolerPdo extends PartPdo
 {
     private const TABLE_NAME = 'cpu_cooler';
     private const INSERT_QUERY = "INSERT INTO cpu_cooler (name, producer, height, sockets, mpn, ean, imageLink) VALUES (:name, :producer, :height, :sockets, :mpn, :ean, :imageLink)";
@@ -34,19 +37,19 @@ class CpuCoolerPdo extends PdoDb
 
     public function rowToObject(array|bool $row): CpuCooler|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new CpuCooler(
-            $row['name'],
-            $row['producer'],
-            $row['height'],
-            json_decode($row['sockets'], true),
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new CpuCooler(
+                $row['name'],
+                $row['producer'],
+                $row['height'],
+                json_decode($row['sockets'], true),
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -62,4 +65,41 @@ class CpuCoolerPdo extends PdoDb
         ];
     }
 
+    public function getCompatibleParts(build $build): array
+    {
+        if (!$build) {
+            return [];
+        }
+
+        $baseQuery = "SELECT * FROM " . self::TABLE_NAME;
+        $conditions = [];
+
+        $mb = $build->getPart('motherboard');
+        $chassis = $build->getPart('chassis');
+
+        if ($mb instanceof Mb) {
+            $conditions[] = "sockets LIKE '%\"" . $mb->getSocket() . "\"%'";
+        }
+        if ($chassis instanceof Chassis) {
+            $conditions[] = "height <= " . $chassis->getMaxCpuCoolerHeight();
+        }
+
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
+    }
 }

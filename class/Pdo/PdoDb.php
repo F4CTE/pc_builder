@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Parent;
-
-use App\Build\build;
 use PDO;
 
 abstract class PdoDb
@@ -98,10 +96,5 @@ abstract class PdoDb
         $stmt = $this->pdo->prepare("DELETE FROM " . $this->table);
         $stmt->execute();
         return $stmt->rowCount() > 0;
-    }
-
-    public function getCompatibleItems(Build $item): bool|array|null
-    {
-        return null;
     }
 }

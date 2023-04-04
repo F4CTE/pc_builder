@@ -2,10 +2,11 @@
 
 namespace App\Hdd;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
 
-class HddPdo extends PdoDb
+class HddPdo extends PartPdo
 {
 
     private const TABLE_NAME = 'hdds';
@@ -67,6 +68,33 @@ class HddPdo extends PdoDb
             $row['imageLink'],
             $row['id']
         );
+    }
+
+    public function getCompatibleParts(build $build): array
+    {
+        if(!$build){
+            return [];
+        }
+        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
+        $motherboard = $build->getPart('motherboard');
+        if($motherboard instanceof Mb){
+    
+            $query = $this->pdo->prepare($baseQuery);
+    
+            $query->execute();
+    
+            $result = $query->fetchAll();
+    
+            $compatibleParts = [];
+    
+            foreach ($result as $row) {
+                $compatibleParts[] = $this->rowToObject($row);
+            }
+    
+            return $compatibleParts;
+
+        }
+        return [];
     }
 
 }

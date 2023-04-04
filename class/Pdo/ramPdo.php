@@ -2,12 +2,12 @@
 
 namespace App\Ram;
 
-use App\Parent\PdoDb;
 use PDO;
 use App\Build\Build;
 use App\Mb\Mb;
+use App\Parent\PartPdo;
 
-class RamPdo extends PdoDb
+class RamPdo extends PartPdo
 {
     private const TABLE_NAME = 'rams';
     private const UPDATE_QUERY = "UPDATE rams SET name = :name, producer = :producer, Type = :Type, capacity = :capacity, clock = :clock, sticks = :sticks, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
@@ -73,16 +73,23 @@ class RamPdo extends PdoDb
         ];
     }
 
-    public function getCompatibleItems(Build $build): bool|array|null
+    public function getCompatibleParts(Build $build = null): array
     {
-        if (!$build) {
+        if (!$build instanceof Build || is_null($build->getPart('motherboard',true))) {
             return $this->getAll();
         }
-        $motherboard = $build->getIndividualPart('motherboard');
-        $socket = $motherboard->getMemoryType();
-        $query = "SELECT * FROM rams WHERE Type LIKE :type";
+        $motherboard = $build->getPart('motherboard');
+        if (!$motherboard instanceof Mb) {
+            return [];
+        }
+        $memType = $motherboard->getMemoryType();
+        $query = "SELECT * FROM ".self::TABLE_NAME." WHERE Type LIKE :type";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':type' => $socket . "%"]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([':type' => $memType . "%"]);
+        $result = [];
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $result[] = $this->rowToObject($row);
+        };
+        return $result;
     }
 }

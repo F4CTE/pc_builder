@@ -3,10 +3,11 @@
 namespace App\Cpu;
 
 use App\Build\build;
-use App\Parent\PdoDb;
+use App\Mb\Mb;
+use App\Parent\PartPdo;
 use PDO;
 
-class CpuPdo extends PdoDb
+class CpuPdo extends PartPdo
 {
     private const TABLE_NAME = 'cpus';
     private const UPDATE_QUERY = 'UPDATE cpus SET name = :name, producer = :producer, baseClock = :baseClock, turboClock = :turboClock, cores = :cores, threads = :threads, socket = :socket, tdp = :tdp, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id';
@@ -73,17 +74,37 @@ class CpuPdo extends PdoDb
         ];
     }
 
-    public function getCompatibleItems(Build $build): bool|array|null
-    {   
-        if(!$build) {
-            return $this->getAll();
+    public function getCompatibleParts(Build $build = null): array
+    {
+
+        if(!$build){
+            return [];
         }
-        $motherboard = $build->getIndividualPart('motherboard');
-        $socket = $motherboard->getSocket();
-        $query = "SELECT * FROM cpus WHERE socket = :socket";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([':socket' => $socket]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
+        $conditions =[];
+        $motherboard = $build->getPart('motherboard');
+        if ($motherboard instanceof Mb) {
+            $conditions[] = 'socket = \''.$motherboard->getSocket().'\'';
+        }
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
+
+
+
     }
-    
 }

@@ -108,6 +108,10 @@ class Mb extends Part
                 return $this->ports['m2Pcie3'];
         }
 
+        public function getm2Count(){
+                return $this->getM2Pcie3() + $this->getM2Pcie4();
+        }
+
         public function getSata(): int
         {
                 return $this->ports['sata'];
@@ -126,6 +130,11 @@ class Mb extends Part
         public function getMemoryType(): string
         {
                 return $this->memoryType;
+        }
+
+        public function setForm(string $format) {
+                $this->form = $format;
+                return $this;
         }
 
         public function getForm(): string

@@ -2,10 +2,13 @@
 
 namespace App\Mb;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\build;
+use App\Chassis\Chassis;
+use App\Cpu\Cpu;
+use App\Parent\PartPdo;
+use App\Ram\Ram;
 
-class MbPdo extends PdoDb
+class MbPdo extends PartPdo
 {
 
     private const TABLE_NAME = 'motherboards';
@@ -65,24 +68,97 @@ class MbPdo extends PdoDb
 
     public function rowToObject(array|bool $row): MB|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Mb(
-            $row['name'],
-            $row['producer'],
-            $row['socket'],
-            $row['chipset'],
-            $row['form'],
-            $row['memoryType'],
-            json_decode($row['ports'], true),
-            $row['memoryCapacity'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
-        
+        } else
+            return new Mb(
+                $row['name'],
+                $row['producer'],
+                $row['socket'],
+                $row['chipset'],
+                $row['form'],
+                $row['memoryType'],
+                json_decode($row['ports'], true),
+                $row['memoryCapacity'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
+    public function getCompatibleParts(build $build): array
+    {
+        if (!$build instanceof Build) {
+            return $this->getAll();
+        }
+
+        $baseQuery = "SELECT * FROM " . self::TABLE_NAME;
+        $conditions = [];
+
+        $chassis = $build->getPart('case');
+        if ($chassis instanceof Chassis) {
+            $chassis = $chassis->getMbFormat();
+            $format = [];
+            switch ($chassis) {
+                case 'E-ATX':
+                    $format[] = '\'E-ATX\'';
+                case 'ATX':
+                    $format[] = '\'ATX\'';
+                case 'Micro-ATX':
+                    $format[] = '\'Micro-ATX\'';
+                case 'Mini-ITX':
+                    $format[] = '\'Mini-ITX`\'';
+                    break;
+            }
+            $condition[] = 'form IN (' . implode(',', $format) . ')';
+        }
+
+        $ramType = $build->getPart('rams')[0];
+        if ($ramType instanceof Ram) {
+            $ramType = $ramType->getType();
+            $conditions[] = 'memoryType = \'' . explode('-', $ramType)[0] . '\'';
+        }
+
+
+        if (count($build->getPart('rams', true)) > 0) {
+            $nbstick  = 0;
+            $maxRam = 0;
+            foreach ($build->getPart('rams') as $ram) {
+                $nbstick += $ram->getSticks();
+                $maxRam += $ram->getSize();
+            }
+
+            $conditions[] = 'JSON_EXTRACT(ports, \'$.ram\') >= ' . $nbstick;
+            $conditions[] = 'capacity >= ' . $maxRam;
+        }
+
+        $cpu = $build->getPart('cpu');
+        if ($cpu instanceof Cpu) {
+            $cpu = $cpu->getSocket();
+            $conditions[] = 'socket = ' . $cpu;
+        }
+
+        $nbGpu = count($build->getPart('gpus', true));
+        if ($nbGpu > 0) {
+            $conditions[] = '(JSON_EXTRACT(ports, \'$.pcie3X16\') + JSON_EXTRACT(ports, \'$.pcie4X16\')) >= ' . $nbGpu;
+        }
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
+    }
 }

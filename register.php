@@ -17,8 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ((new UserPdo())->getByUsername(trim($_POST['username'])) || (new UserPdo())->getByEmail(trim($_POST['email']))) {
         $_SESSION['error'] = 'Email or username already in use. would you like to <a href="login.php">login</a> ?';
-        header('Location: register.php');
-        exit();
     }
 
     $user = (new User(trim($_POST['username']), trim($_POST['email'])))->setPassword($_POST['password']);
@@ -29,12 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } else {
         $_SESSION['error'] = "Unable to register. Please try again.";
-        header('Location: register.php');
-        exit();
     }
-} else  if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    require_once __DIR__ . '/public/templates/register.php';
-} else {
-    header('Location: index.php');
-    exit();
 }
+
+require_once __DIR__ . '/public/templates/register.php';

@@ -2,10 +2,11 @@
 
 namespace App\Psu;
 
-use App\Parent\DbItem;
-use App\Parent\PdoDb;
+use App\Build\Build;
+use App\Chassis\Chassis;
+use App\Parent\PartPdo;
 
-class PsuPdo extends PdoDb
+class PsuPdo extends PartPdo
 {
     private const TABLE_NAME = 'psus';
     private const UPDATE_QUERY = "UPDATE psus SET name = :name, producer = :producer, power = :power, connectics = :connectics, format = :format, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
@@ -64,4 +65,51 @@ class PsuPdo extends PdoDb
         ];
     }
 
+
+    public function getCompatibleParts(Build $build): array
+    {
+        if(!$build){
+            return[];
+        }
+
+        $baseQuery = 'SELECT * FROM '.self::TABLE_NAME;
+
+        $chassis= $build->getPart('chassis');
+        $gpus = $build->getPart('gpus');
+        $conditions=[];
+        if($chassis instanceof Chassis){
+            $conditions[] = 'format = \''.$chassis->getPsuFormat().'\'';
+        }
+
+        if(count($gpus)  > 0){
+            $min6Pin = 0;
+            $min8Pin = 0;
+            foreach($gpus as $gpu){
+                $min6Pin += $gpu->getPowerSupply()['pin_6'];
+                $min8Pin += $gpu->getPowerSupply()['pin_8'];
+            }
+            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_6\') >= \''.$min6Pin.'\'';
+            $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_8\') >= \''.$min8Pin.'\'';
+        }
+
+        if (count($conditions) > 0) {
+            $baseQuery .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query = $this->pdo->prepare($baseQuery);
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        $compatibleParts = [];
+
+        foreach ($result as $row) {
+            $compatibleParts[] = $this->rowToObject($row);
+        }
+
+        return $compatibleParts;
+
+
+    }
 }
