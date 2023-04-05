@@ -12,22 +12,22 @@ class UserPdo extends PdoDb
 
     public function __construct()
     {
-        parent::__construct(self::TABLE_NAME,self::UPDATE_QUERY,self::INSERT_QUERY);
+        parent::__construct(self::TABLE_NAME, self::UPDATE_QUERY, self::INSERT_QUERY);
     }
 
 
     public function rowToObject(array|bool $row): User|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new User(
-            $row['username'],
-            $row['email'],
-            $row['password'],
-            $row['admin'],
-            $row['id']
-        );
+        } else
+            return new User(
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['admin'],
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -59,5 +59,4 @@ class UserPdo extends PdoDb
         $row = $stmt->fetch();
         return $this->rowToObject($row);
     }
-
 }

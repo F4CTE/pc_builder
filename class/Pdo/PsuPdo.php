@@ -35,20 +35,20 @@ class PsuPdo extends PartPdo
 
     public function rowToObject(array|bool $row): Psu|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Psu(
-            $row['name'],
-            $row['producer'],
-            $row['power'],
-            json_decode($row['connectics'], true),
-            $row['format'],
-            $row['mpn'],
-            $row['ean'],
-            $row['imageLink'],
-            $row['id']
-        );
+        } else
+            return new Psu(
+                $row['name'],
+                $row['producer'],
+                $row['power'],
+                json_decode($row['connectics'], true),
+                $row['format'],
+                $row['mpn'],
+                $row['ean'],
+                $row['imageLink'],
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -65,17 +65,17 @@ class PsuPdo extends PartPdo
         ];
     }
 
-    
+
     public function getCompatibilityQuery(Build $build): array
     {
         $chassis = $build->getPart('chassis');
         $gpus = $build->getPart('gpus');
         $conditions = [];
-    
+
         if ($chassis instanceof Chassis) {
             $conditions[] = 'format = \'' . $chassis->getPsuFormat() . '\'';
         }
-    
+
         if (count($gpus) > 0) {
             $min6Pin = 0;
             $min8Pin = 0;
@@ -86,8 +86,7 @@ class PsuPdo extends PartPdo
             $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_6\') >= \'' . $min6Pin . '\'';
             $conditions[] = 'JSON_EXTRACT(connectics, \'$.pin_8\') >= \'' . $min8Pin . '\'';
         }
-    
+
         return $conditions;
     }
-    
 }

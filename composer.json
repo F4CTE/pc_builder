@@ -18,7 +18,7 @@
             "App\\Mb\\": ["class/Entity", "class/Pdo"],
             "App\\Psu\\": ["class/Entity", "class/Pdo"],
             "App\\Ram\\": ["class/Entity", "class/Pdo"],
-            "App\\Case\\": ["class/Entity", "class/Pdo"],
+            "App\\Chassis\\": ["class/Entity", "class/Pdo"],
             "App\\CpuCooler\\": ["class/Entity", "class/Pdo"],
             "App\\Parent\\": ["class/Entity", "class/Pdo"],
             "App\\User\\": ["class/Entity", "class/Pdo"],

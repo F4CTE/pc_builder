@@ -88,56 +88,56 @@ class MbPdo extends PartPdo
     }
 
     public function getCompatibilityQuery(Build $build): array
-{
-    $conditions = [];
+    {
+        $conditions = [];
 
-    $chassis = $build->getPart('case');
-    if ($chassis instanceof Chassis) {
-        $chassis = $chassis->getMbFormat();
-        $format = [];
-        switch ($chassis) {
-            case 'E-ATX':
-                $format[] = '\'E-ATX\'';
-            case 'ATX':
-                $format[] = '\'ATX\'';
-            case 'Micro-ATX':
-                $format[] = '\'Micro-ATX\'';
-            case 'Mini-ITX':
-                $format[] = '\'Mini-ITX\'';
-                break;
-        }
-        $conditions[] = 'form IN (' . implode(',', $format) . ')';
-    }
-
-    $ramType = $build->getPart('rams')[0];
-    if ($ramType instanceof Ram) {
-        $ramType = $ramType->getType();
-        $conditions[] = 'memoryType = \'' . explode('-', $ramType)[0] . '\'';
-    }
-
-    if (count($build->getPart('rams', true)) > 0) {
-        $nbstick = 0;
-        $maxRam = 0;
-        foreach ($build->getPart('rams') as $ram) {
-            $nbstick += $ram->getSticks();
-            $maxRam += $ram->getSize();
+        $chassis = $build->getPart('case');
+        if ($chassis instanceof Chassis) {
+            $chassis = $chassis->getMbFormat();
+            $format = [];
+            switch ($chassis) {
+                case 'E-ATX':
+                    $format[] = '\'E-ATX\'';
+                case 'ATX':
+                    $format[] = '\'ATX\'';
+                case 'Micro-ATX':
+                    $format[] = '\'Micro-ATX\'';
+                case 'Mini-ITX':
+                    $format[] = '\'Mini-ITX\'';
+                    break;
+            }
+            $conditions[] = 'form IN (' . implode(',', $format) . ')';
         }
 
-        $conditions[] = 'JSON_EXTRACT(ports, \'$.ram\') >= ' . $nbstick;
-        $conditions[] = 'capacity >= ' . $maxRam;
-    }
+        $ramType = $build->getPart('rams')[0];
+        if ($ramType instanceof Ram) {
+            $ramType = $ramType->getType();
+            $conditions[] = 'memoryType = \'' . explode('-', $ramType)[0] . '\'';
+        }
 
-    $cpu = $build->getPart('cpu');
-    if ($cpu instanceof Cpu) {
-        $cpu = $cpu->getSocket();
-        $conditions[] = 'socket = \'' . $cpu . '\'';
-    }
+        if (count($build->getPart('rams', true)) > 0) {
+            $nbstick = 0;
+            $maxRam = 0;
+            foreach ($build->getPart('rams') as $ram) {
+                $nbstick += $ram->getSticks();
+                $maxRam += $ram->getSize();
+            }
 
-    $nbGpu = count($build->getPart('gpus', true));
-    if ($nbGpu > 0) {
-        $conditions[] = '(JSON_EXTRACT(ports, \'$.pcie3X16\') + JSON_EXTRACT(ports, \'$.pcie4X16\')) >= ' . $nbGpu;
-    }
+            $conditions[] = 'JSON_EXTRACT(ports, \'$.ram\') >= ' . $nbstick;
+            $conditions[] = 'capacity >= ' . $maxRam;
+        }
 
-    return $conditions;
-}
+        $cpu = $build->getPart('cpu');
+        if ($cpu instanceof Cpu) {
+            $cpu = $cpu->getSocket();
+            $conditions[] = 'socket = \'' . $cpu . '\'';
+        }
+
+        $nbGpu = count($build->getPart('gpus', true));
+        if ($nbGpu > 0) {
+            $conditions[] = '(JSON_EXTRACT(ports, \'$.pcie3X16\') + JSON_EXTRACT(ports, \'$.pcie4X16\')) >= ' . $nbGpu;
+        }
+
+        return $conditions;
+    }
 }

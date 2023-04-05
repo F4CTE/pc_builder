@@ -3,8 +3,9 @@
 namespace App\Chassis;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Chassis extends Part
+class Chassis extends Part implements JsonSerializable
 {
     private string $MbFormat;
     private string $psuFormat;
@@ -36,6 +37,22 @@ class Chassis extends Part
         $this->psuFormat = $psuFormat;
         $this->maxGpuSize = $maxGpuSize;
         $this->MaxCpuCoolerHeight = $MaxCpuCoolerHeight;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'MbFormat' => $this->MbFormat,
+            'psuFormat' => $this->psuFormat,
+            'maxGpuSize' => $this->maxGpuSize,
+            'MaxCpuCoolerHeight' => $this->MaxCpuCoolerHeight,
+        ];
     }
 
     protected function createPdo(): void

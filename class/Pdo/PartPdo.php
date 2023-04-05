@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Parent;
 
 use App\Build\build;
 
-abstract class PartPdo extends PdoDb {
+abstract class PartPdo extends PdoDb
+{
     protected $baseQuery;
     public function __construct($tableName, $updateQuery, $insertQuery)
     {
-        $this->baseQuery = 'SELECT * FROM '.$tableName;
+        $this->baseQuery = 'SELECT * FROM ' . $tableName;
         parent::__construct($tableName, $updateQuery, $insertQuery);
     }
 
@@ -16,27 +18,27 @@ abstract class PartPdo extends PdoDb {
         if (!$build) {
             return [];
         }
-    
+
         $conditions = $this->getCompatibilityQuery($build);
-    
+
         if (count($conditions) > 0) {
             $this->baseQuery .= " WHERE " . implode(' AND ', $conditions);
         }
-    
+
         $query = $this->pdo->prepare($this->baseQuery);
-    
+
         $query->execute();
-    
+
         $result = $query->fetchAll();
-    
+
         $compatibleParts = [];
-    
+
         foreach ($result as $row) {
             $compatibleParts[] = $this->rowToObject($row);
         }
-    
+
         return $compatibleParts;
     }
 
-    abstract protected function getCompatibilityQuery(build $build) : null|array;
+    abstract protected function getCompatibilityQuery(build $build): ?array;
 }

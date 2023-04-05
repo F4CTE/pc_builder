@@ -3,8 +3,9 @@
 namespace App\CpuCooler;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class CpuCooler extends Part
+class CpuCooler extends Part implements JsonSerializable
 {
     private array $sockets;
     private int $height;
@@ -30,6 +31,20 @@ class CpuCooler extends Part
 
         $this->sockets = $sockets;
         $this->height = $height;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'sockets' => $this->sockets,
+            'height' => $this->height,
+        ];
     }
 
     protected function createPdo(): void

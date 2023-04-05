@@ -3,8 +3,9 @@
 namespace App\Cpu;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Cpu extends Part
+class Cpu extends Part implements JsonSerializable
 {
     private float $baseClock;
     private float $turboClock;
@@ -42,6 +43,24 @@ class Cpu extends Part
         $this->threads = $threads;
         $this->socket = $socket;
         $this->tdp = $tdp;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'baseClock' => $this->baseClock,
+            'turboClock' => $this->turboClock,
+            'cores' => $this->cores,
+            'threads' => $this->threads,
+            'socket' => $this->socket,
+            'tdp' => $this->tdp,
+        ];
     }
 
     protected function createPdo(): void

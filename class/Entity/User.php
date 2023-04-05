@@ -3,13 +3,15 @@
 namespace App\User;
 
 use App\Parent\DbItem;
+use JsonSerializable;
 
-class user extends DbItem
+class user extends DbItem implements JsonSerializable
 {
     private string $username;
     private string $email;
     private ?string $password;
     private bool $admin;
+    private bool $banned;
 
     public function __construct(
         string $username,
@@ -17,12 +19,25 @@ class user extends DbItem
         ?string $password = null,
         ?bool $admin = false,
         ?int $id = null,
+        ?bool $banned = false,
     ) {
         parent::__construct($id);
         $this->username = $username;
         $this->email = $email;
         $this->password = $password ?? null;
         $this->admin = $admin;
+        $this->banned = $banned;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+            'admin' => $this->admin,
+            'banned' => $this->banned,
+        ];
     }
 
     final protected function createPdo(): void

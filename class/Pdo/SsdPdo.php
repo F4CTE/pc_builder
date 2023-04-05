@@ -9,7 +9,7 @@ use App\Parent\PartPdo;
 class SsdPdo extends PartPdo
 {
     private const TABLE_NAME = 'ssds';
-    private const UPDATE_QUERY = "UPDATE ssds SET name = :name, producer = :producer, form = :form, protocol = :protocol, storage = :storage, controller = :controller, nand = :nand, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
+    private const UPDATE_QUERY = "UPDATE ssds SET name = :name, producer = :producer, form = :form, protocol = :protocol, capacity = :capacity, controller = :controller, nand = :nand, mpn = :mpn, ean = :ean, imageLink = :imageLink WHERE id = :id";
     private const INSERT_QUERY = "INSERT INTO ssds (name, producer, form, protocol, capacity, controller, nand, mpn, ean, imageLink) VALUES (:name, :producer, :form, :protocol, :capacity, :controller, :nand, :mpn, :ean, :imageLink)";
 
     public function __construct()
@@ -46,7 +46,7 @@ class SsdPdo extends PartPdo
                 $row['producer'],
                 $row['form'],
                 $row['protocol'],
-                $row['storage'],
+                $row['capacity'],
                 $row['controller'],
                 $row['nand'],
                 $row['mpn'],

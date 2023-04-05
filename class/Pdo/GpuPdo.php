@@ -84,22 +84,22 @@ class GpuPdo extends PartPdo
         $motherboard = $build->getPart('motherboard');
         $psu = $build->getPart('psu');
         $conditions = [];
-    
+
         if ($motherboard instanceof Mb) {
             if ($motherboard->getPcie3X16() + $motherboard->getPcie4X16() < 1) {
                 return null;
             }
         }
-    
+
         if ($chassis instanceof Chassis) {
             $conditions[] = 'maxGpuSize >= ' . $chassis->getMaxGpuSize();
         }
-    
+
         if ($psu instanceof Psu) {
             $conditions[] = 'JSON_EXTRACT(PowerSupply, \'$.pin_8\') <= \'' . $psu->getEightPin() . '\'';
             $conditions[] = 'JSON_EXTRACT(powerSupply, \'$.pin_6\') <= \'' . $psu->getSixPin() . '\'';
         }
-    
+
         return $conditions;
     }
 }

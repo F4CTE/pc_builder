@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Build;
+
 use App\Parent\PdoDb;
 
 class BuildPdo extends PdoDb
@@ -17,16 +18,15 @@ class BuildPdo extends PdoDb
 
     public function rowToObject(array|bool $row): Build|bool
     {
-        if (!$row){
+        if (!$row) {
             return $row;
-        } else 
-        return new Build(
-            $row['user_id'],
-            $row['name'],
-            json_decode($row['parts'],true),
-            $row['id']
-        );
-        
+        } else
+            return new Build(
+                $row['user_id'],
+                $row['name'],
+                json_decode($row['parts'], true),
+                $row['id']
+            );
     }
 
     public function objectToRow($item): array
@@ -39,4 +39,17 @@ class BuildPdo extends PdoDb
         ];
     }
 
+    public function getByUserId(int $userId): array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM builds WHERE user_id = :user_id');
+        $stmt->execute([
+            ':user_id' => $userId
+        ]);
+        $result = $stmt->fetchAll();
+        $objects = [];
+        foreach ($result as $row) {
+            $objects[] = $this->rowToObject($row);
+        }
+        return $objects;
+    }
 }

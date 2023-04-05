@@ -47,7 +47,7 @@ class RamPdo extends PartPdo
             return new Ram(
                 $row['name'],
                 $row['producer'],
-                $row['type'],
+                $row['Type'],
                 $row['capacity'],
                 $row['clock'],
                 $row['sticks'],
@@ -63,7 +63,7 @@ class RamPdo extends PartPdo
         return [
             'name' => $item->getName(),
             'producer' => $item->getProducer(),
-            'type' => $item->getType(),
+            'Type' => $item->getType(),
             'capacity' => $item->getCapacity(),
             'clock' => $item->getClock(),
             'sticks' => $item->getSticks(),
@@ -75,15 +75,15 @@ class RamPdo extends PartPdo
 
     public function getCompatibilityQuery(?Build $build): ?array
     {
-    
+
         $motherboard = $build->getPart('motherboard');
         $conditions = [];
-    
+
         if ($motherboard instanceof Mb) {
             $memType = $motherboard->getMemoryType();
             $conditions[] = "Type LIKE '" . $memType . "'";
         }
-        
+
         return $conditions;
     }
 }

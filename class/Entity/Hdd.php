@@ -3,8 +3,9 @@
 namespace App\Hdd;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Hdd extends Part
+class Hdd extends Part implements JsonSerializable
 {
     private int $size;
     private int $rpm;
@@ -31,6 +32,20 @@ class Hdd extends Part
 
         $this->size = $size;
         $this->rpm = $rpm;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'size' => $this->size,
+            'rpm' => $this->rpm,
+        ];
     }
 
     protected function createPdo(): void
@@ -63,7 +78,8 @@ class Hdd extends Part
         return $this->size;
     }
 
-    public function setRpm(int $rpm) {
+    public function setRpm(int $rpm)
+    {
         $this->rpm = $rpm;
         return $this;
     }

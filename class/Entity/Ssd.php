@@ -3,8 +3,9 @@
 namespace App\Ssd;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Ssd extends Part
+class Ssd extends Part implements JsonSerializable
 {
     private string $form;
     private string $protocol;
@@ -39,6 +40,21 @@ class Ssd extends Part
         $this->storage = $storage;
         $this->nand = $nand;
         $this->controller = $controller;
+    }
+    public function jsonSerialize():array {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'producer' => $this->getProducer(),
+            'mpn' => $this->getMpn(),
+            'ean' => $this->getEan(),
+            'imageLink' => $this->getImageLink(),
+            'form' => $this->getForm(),
+            'protocol' => $this->getProtocol(),
+            'storage' => $this->getSize(),
+            'nand' => $this->getNand(),
+            'controller' => $this->getController(),
+        ];
     }
 
     final protected function createPdo(): void
@@ -85,6 +101,4 @@ class Ssd extends Part
     {
         return $this->controller;
     }
-
-
 }

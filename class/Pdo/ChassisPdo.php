@@ -72,48 +72,48 @@ class ChassisPdo extends PartPdo
     }
 
     protected function getCompatibilityQuery(Build $build): ?array
-{
-    $conditions = [];
+    {
+        $conditions = [];
 
-    $cpuCooler = $build->getPart('cpuCooler');
-    if ($cpuCooler instanceof CpuCooler) {
-        $conditions[] = 'maxCpuCoolerHeight >= ' . $cpuCooler->getHeight();
-    }
-
-    $mbFormat = $build->getPart('motherboard');
-    if ($mbFormat instanceof Mb) {
-        $format = [];
-        switch ($mbFormat->getForm()) {
-            case 'Mini-ITX':
-                $format[] = '\'Mini-ITX\'';
-            case 'Micro-ATX':
-                $format[] = '\'Micro-ATX\'';
-            case 'ATX':
-                $format[] = '\'ATX\'';
-            case 'E-ATX':
-                $format[] = '\'E-ATX\'';
-                break;
+        $cpuCooler = $build->getPart('cpuCooler');
+        if ($cpuCooler instanceof CpuCooler) {
+            $conditions[] = 'maxCpuCoolerHeight >= ' . $cpuCooler->getHeight();
         }
-        $conditions[] = 'mbFormat IN (' . implode(',', $format) . ')';
-    }
 
-    $gpus = $build->getPart('gpus');
-    if (count($gpus) > 0) {
-        $maxGpuSize = null;
-        foreach ($gpus as $object) {
-            $value = $object->getLength();
-            if ($maxGpuSize === null || $value > $maxGpuSize) {
-                $maxGpuSize = $value;
+        $mbFormat = $build->getPart('motherboard');
+        if ($mbFormat instanceof Mb) {
+            $format = [];
+            switch ($mbFormat->getForm()) {
+                case 'Mini-ITX':
+                    $format[] = '\'Mini-ITX\'';
+                case 'Micro-ATX':
+                    $format[] = '\'Micro-ATX\'';
+                case 'ATX':
+                    $format[] = '\'ATX\'';
+                case 'E-ATX':
+                    $format[] = '\'E-ATX\'';
+                    break;
             }
+            $conditions[] = 'mbFormat IN (' . implode(',', $format) . ')';
         }
-        $conditions[] = 'maxGpuSize >= ' . $maxGpuSize;
-    }
 
-    $psu = $build->getPart('psu');
-    if ($psu instanceof Psu) {
-        $conditions[] = 'psuFormat = \'' . $psu->getFormat() . '\'';
-    }
+        $gpus = $build->getPart('gpus');
+        if (count($gpus) > 0) {
+            $maxGpuSize = null;
+            foreach ($gpus as $object) {
+                $value = $object->getLength();
+                if ($maxGpuSize === null || $value > $maxGpuSize) {
+                    $maxGpuSize = $value;
+                }
+            }
+            $conditions[] = 'maxGpuSize >= ' . $maxGpuSize;
+        }
 
-    return $conditions;
-}
+        $psu = $build->getPart('psu');
+        if ($psu instanceof Psu) {
+            $conditions[] = 'psuFormat = \'' . $psu->getFormat() . '\'';
+        }
+
+        return $conditions;
+    }
 }

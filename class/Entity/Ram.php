@@ -3,8 +3,9 @@
 namespace App\Ram;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Ram extends Part
+class Ram extends Part implements JsonSerializable
 {
     private string $type;
     private int $capacity;
@@ -36,6 +37,22 @@ class Ram extends Part
         $this->capacity = $capacity;
         $this->clock = $clock;
         $this->nbStick = $nbStick;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'type' => $this->type,
+            'capacity' => $this->capacity,
+            'clock' => $this->clock,
+            'nbStick' => $this->nbStick,
+        ];
     }
 
     protected function createPdo(): void

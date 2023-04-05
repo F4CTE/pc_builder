@@ -77,14 +77,14 @@ class CpuPdo extends PartPdo
     protected function getCompatibilityQuery(?Build $build): ?array
     {
         $conditions = [];
-    
+
         if ($build !== null) {
             $motherboard = $build->getPart('motherboard');
             if ($motherboard instanceof Mb) {
                 $conditions[] = 'socket = \'' . $motherboard->getSocket() . '\'';
             }
         }
-    
+
         return $conditions;
     }
 }

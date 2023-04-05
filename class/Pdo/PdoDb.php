@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Parent;
+
 use PDO;
 
 abstract class PdoDb
@@ -44,8 +45,11 @@ abstract class PdoDb
         }
         return $objects;
     }
-
-    final public function getById(int $id): ?dbitem
+    /**
+     * @param int $id
+     * @return Chassis|Cpu|CpuCooler|Gpu|Hdd|Mb|Psu|Ram|Ssd|User|bool
+     */
+    final public function getById(int $id): bool|dbitem
     {
         $sql = 'SELECT * FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);

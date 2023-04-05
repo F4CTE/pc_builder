@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Build;
+
 use App\Chassis\ChassisPdo;
 use App\Cpu\CpuPdo;
 use App\CpuCooler\CpuCoolerPdo;
@@ -12,8 +13,9 @@ use App\Parent\Part;
 use App\Psu\PsuPdo;
 use App\Ram\RamPdo;
 use App\Ssd\SsdPdo;
+use JsonSerializable;
 
-class Build extends DbItem
+class Build extends DbItem implements JsonSerializable
 {
     private ?int $userId = null;
     private ?string $name = null;
@@ -39,6 +41,16 @@ class Build extends DbItem
         $this->userId = $userId;
         $this->name = $name;
         $this->parts = $parts ?? $this->parts;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'userId' => $this->userId,
+            'name' => $this->name,
+            'parts' => $this->parts,
+        ];
     }
 
     protected function createPdo(): void
@@ -103,7 +115,7 @@ class Build extends DbItem
         }
     }
 
-    
+
     public function getPart(string $key, bool $id = false): Part|array|null|int
     {
         if (!array_key_exists($key, $this->parts) || $this->parts[$key] === null) {
@@ -120,49 +132,49 @@ class Build extends DbItem
                 if ($id) {
                     return $this->parts['cpuCooler'];
                 } else
-                return (new CpuCoolerPdo())->getById($this->parts['cpuCooler']);
+                    return (new CpuCoolerPdo())->getById($this->parts['cpuCooler']);
                 break;
             case 'motherboard':
                 if ($id) {
                     return $this->parts['motherboard'];
                 } else
-                return (new MbPdo())->getById($this->parts['motherboard']);
+                    return (new MbPdo())->getById($this->parts['motherboard']);
                 break;
             case 'psu':
                 if ($id) {
                     return $this->parts['psu'];
                 } else
-                return (new PsuPdo())->getById($this->parts['psu']);
+                    return (new PsuPdo())->getById($this->parts['psu']);
                 break;
             case 'case':
                 if ($id) {
                     return $this->parts['case'];
                 } else
-                return (new ChassisPdo())->getById($this->parts['case']);
+                    return (new ChassisPdo())->getById($this->parts['case']);
                 break;
             case 'rams':
                 if ($id) {
                     return $this->parts['rams'];
                 } else
-                return (new RamPdo())->getByIds($this->parts['rams']);
+                    return (new RamPdo())->getByIds($this->parts['rams']);
                 break;
             case 'gpus':
                 if ($id) {
                     return $this->parts['gpus'];
                 } else
-                return (new GpuPdo())->getByIds($this->parts['gpus']);
+                    return (new GpuPdo())->getByIds($this->parts['gpus']);
                 break;
             case 'hdds':
                 if ($id) {
                     return $this->parts['hdds'];
                 } else
-                return (new HddPdo())->getByIds($this->parts['hdds']);
+                    return (new HddPdo())->getByIds($this->parts['hdds']);
                 break;
             case 'ssds':
                 if ($id) {
                     return $this->parts['ssds'];
                 } else
-                return (new SsdPdo())->getByIds($this->parts['ssds']);
+                    return (new SsdPdo())->getByIds($this->parts['ssds']);
             default:
                 return null;
                 break;

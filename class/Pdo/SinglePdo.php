@@ -26,7 +26,7 @@ class SinglePdo
     final public static function getInstance()
     {
         if (self::$instance == null) {
-            (new Dotenv())->loadEnv(__DIR__.'/../../.env');
+            (new Dotenv())->loadEnv(__DIR__ . '/../../.env');
             $dsn = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=' . $_ENV['DB_CHARSET'];
             try {
                 self::$instance = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], self::OPTIONS);

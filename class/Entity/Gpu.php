@@ -3,8 +3,9 @@
 namespace App\Gpu;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Gpu extends Part
+class Gpu extends Part implements JsonSerializable
 {
     private int $boostClock;
     private int $vram;
@@ -43,6 +44,24 @@ class Gpu extends Part
         $this->length = $length;
         $this->powerSupply = $powerSupply;
         $this->tdp = $tdp;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'boostClock' => $this->boostClock,
+            'vram' => $this->vram,
+            'memoryClock' => $this->memoryClock,
+            'length' => $this->length,
+            'powerSupply' => $this->powerSupply,
+            'tdp' => $this->tdp,
+        ];
     }
 
     protected function createPdo(): void

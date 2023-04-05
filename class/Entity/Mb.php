@@ -3,8 +3,9 @@
 namespace App\Mb;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Mb extends Part
+class Mb extends Part implements JsonSerializable
 {
         private string $socket;
         private string $chipset;
@@ -51,6 +52,24 @@ class Mb extends Part
                 $this->memoryType =  $memoryType;
                 $this->memoryCapacity = $memoryCapacity;
                 $this->ports = $ports;
+        }
+
+        public function jsonSerialize(): array
+        {
+                return [
+                        'id' => $this->id,
+                        'name' => $this->name,
+                        'producer' => $this->producer,
+                        'mpn' => $this->mpn,
+                        'ean' => $this->ean,
+                        'imageLink' => $this->imageLink,
+                        'socket' => $this->socket,
+                        'chipset' => $this->chipset,
+                        'form' => $this->form,
+                        'memoryType' => $this->memoryType,
+                        'memoryCapacity' => $this->memoryCapacity,
+                        'ports' => $this->ports,
+                ];
         }
 
         protected function createPdo(): void
@@ -108,7 +127,8 @@ class Mb extends Part
                 return $this->ports['m2Pcie3'];
         }
 
-        public function getm2Count(){
+        public function getm2Count()
+        {
                 return $this->getM2Pcie3() + $this->getM2Pcie4();
         }
 
@@ -132,7 +152,8 @@ class Mb extends Part
                 return $this->memoryType;
         }
 
-        public function setForm(string $format) {
+        public function setForm(string $format)
+        {
                 $this->form = $format;
                 return $this;
         }

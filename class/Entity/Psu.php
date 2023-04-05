@@ -3,8 +3,9 @@
 namespace App\Psu;
 
 use App\Parent\Part;
+use JsonSerializable;
 
-class Psu extends Part
+class Psu extends Part implements JsonSerializable
 {
     private int $power;
     private ?string $format;
@@ -33,6 +34,21 @@ class Psu extends Part
         $this->power = $power;
         $this->format = $format;
         $this->connectics = $connectics;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'producer' => $this->producer,
+            'mpn' => $this->mpn,
+            'ean' => $this->ean,
+            'imageLink' => $this->imageLink,
+            'power' => $this->power,
+            'format' => $this->format,
+            'connectics' => $this->connectics,
+        ];
     }
 
     protected function createPdo(): void
