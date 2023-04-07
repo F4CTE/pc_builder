@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/public/src/css/global.css">
     <script defer src="/public/src/js/main.js"></script>
-    <?php if ($_SESSION['isAdmin']) : ?>
+    <?php if (isset($_SESSION['isAdmin']) && $_SESSION['isAdmin']) : ?>
         <script defer src="/public/src/js/admin.js"></script>
     <?php endif ?>
     <title><?php echo $pageTitle ?></title>

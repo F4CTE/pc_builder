@@ -24,7 +24,7 @@ class ChassisPdo extends PartPdo
         $chassis = new Chassis(
             $arrayItem['name'],
             $arrayItem['producer'],
-            $arrayItem['Motherboard'],
+            $arrayItem['Motherboard'] ?? $arrayItem['MbFormat'],
             $arrayItem['Psu'] ?? $arrayItem['Motherboard'],
             intval($arrayItem['gpu_size']),
             intval($arrayItem['cpu_cooler_height']),
@@ -60,10 +60,10 @@ class ChassisPdo extends PartPdo
             return new Chassis(
                 $row['name'],
                 $row['producer'],
-                $row['mbFormat'],
+                $row['mbFormat'] ?? $row['MbFormat'],
                 $row['psuFormat'] ?? $row['mbFormat'],
                 $row['maxGpuSize'],
-                $row['maxCpuCoolerHeight'],
+                $row['maxCpuCoolerHeight'] ?? $row['MaxCpuCoolerHeight'],
                 $row['mpn'],
                 $row['ean'],
                 $row['imageLink'],

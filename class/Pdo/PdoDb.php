@@ -71,14 +71,14 @@ abstract class PdoDb
 
     abstract public function objectToRow(DbItem $item): array;
 
-    final public function create($item): ?int
+    final public function create($item): int
     {
         $stmt = $this->pdo->prepare($this->insertQuery);
         $stmt->execute($this->objectToRow($item));
-        return $this->pdo->lastInsertId();
+        return is_numeric($this->pdo->lastInsertId());
     }
 
-    final public function update($item): ?bool
+    final public function update($item): bool
     {
         $stmt = $this->pdo->prepare($this->updateQuery);
         $stmt->execute($this->objectToRow($item) + [':id' => $item->getId()]);
@@ -95,7 +95,7 @@ abstract class PdoDb
         return $stmt->rowCount() > 0;
     }
 
-    final public function deleteAll(): ?bool
+    final public function deleteAll(): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM " . $this->table);
         $stmt->execute();

@@ -61,7 +61,7 @@ class HddPdo extends PartPdo
             return new Hdd(
                 $row['name'],
                 $row['producer'],
-                $row['capacity'],
+                $row['capacity'] ?? $row['size'],
                 $row['rpm'],
                 $row['mpn'],
                 $row['ean'],

@@ -47,10 +47,10 @@ class RamPdo extends PartPdo
             return new Ram(
                 $row['name'],
                 $row['producer'],
-                $row['Type'],
+                $row['Type'] ?? $row['type'],
                 $row['capacity'],
                 $row['clock'],
-                $row['sticks'],
+                $row['sticks'] ?? $row['nbStick'],
                 $row['mpn'],
                 $row['ean'],
                 $row['imageLink'],

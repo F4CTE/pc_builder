@@ -77,6 +77,24 @@ require_once __DIR__ . '/public/templates/head.php';
             </div>
         </div>
 
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 id="modal-title" class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+
+                    </div>
+                    <div id="modal-footer" class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </main>
     <?php require_once __DIR__ . '/public/templates/footer.php'; ?>
 </body>

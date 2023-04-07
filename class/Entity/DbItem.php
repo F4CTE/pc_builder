@@ -18,16 +18,39 @@ abstract class DbItem
         return $this->id;
     }
 
-    final public function save(): void
+    final public function save()
     {
-        !is_null($this->id) ? $this->update() : $this->id = $this->insert();
+        $result = [];
+        if (!is_null($this->id)) {
+            $updateResult = $this->update();
+            $result['status'] = $updateResult ? 'success' : 'error';
+            if (!$updateResult) {
+                $result['message'] = 'Update operation failed.';
+            }
+        } else {
+            $insertResult = is_numeric($this->insert());
+            $result['status'] = $insertResult ? 'success' : 'error';
+            if (!$insertResult) {
+                $result['message'] = 'Insert operation failed.';
+            }
+        }
+        return $result;
     }
 
-    final public function destroy(): void
-    {
-        $this->delete();
+
+final public function destroy()
+{
+    $result = [];
+    $deleteResult = $this->delete();
+    if ($deleteResult) {
         unset($this->id);
+        $result['status'] = 'success';
+    } else {
+        $result['status'] = 'error';
+        $result['message'] = 'Delete operation failed.';
     }
+    return $result;
+}
 
     abstract protected function createPdo(): void;
 

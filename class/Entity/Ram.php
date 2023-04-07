@@ -95,4 +95,8 @@ class Ram extends Part implements JsonSerializable
     {
         return $this->type;
     }
+
+    public function getCapacity():int {
+        return $this->capacity;
+    }
 }

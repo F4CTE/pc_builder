@@ -52,7 +52,7 @@ class GpuPdo extends PartPdo
                 $row['vram'],
                 $row['memoryClock'],
                 $row['length'],
-                json_decode($row['powerSupply'], true),
+                is_array($row['powerSupply']) ? $row['powerSupply'] : json_decode($row['powerSupply'], true),
                 $row['tdp'],
                 $row['mpn'],
                 $row['ean'],

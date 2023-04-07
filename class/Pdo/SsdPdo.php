@@ -46,7 +46,7 @@ class SsdPdo extends PartPdo
                 $row['producer'],
                 $row['form'],
                 $row['protocol'],
-                $row['capacity'],
+                $row['capacity'] ?? $row['storage'],
                 $row['controller'],
                 $row['nand'],
                 $row['mpn'],

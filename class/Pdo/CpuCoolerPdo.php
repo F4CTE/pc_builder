@@ -44,7 +44,7 @@ class CpuCoolerPdo extends PartPdo
                 $row['name'],
                 $row['producer'],
                 $row['height'],
-                json_decode($row['sockets'], true),
+                is_array($row['sockets']) ? $row['sockets'] : json_decode($row['sockets']),
                 $row['mpn'],
                 $row['ean'],
                 $row['imageLink'],

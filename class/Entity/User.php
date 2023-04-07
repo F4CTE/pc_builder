@@ -25,8 +25,8 @@ class user extends DbItem implements JsonSerializable
         $this->username = $username;
         $this->email = $email;
         $this->password = $password ?? null;
-        $this->admin = $admin;
-        $this->banned = $banned;
+        $this->admin = $admin ?? false;
+        $this->banned = $banned ?? false;
     }
 
     public function jsonSerialize(): array
@@ -35,8 +35,9 @@ class user extends DbItem implements JsonSerializable
             'id' => $this->id,
             'username' => $this->username,
             'email' => $this->email,
+            'password' => $this->password,
             'admin' => $this->admin,
-            'banned' => $this->banned,
+            'banned' => $this->banned
         ];
     }
 
@@ -83,6 +84,9 @@ class user extends DbItem implements JsonSerializable
     public function isAdmin(): bool
     {
         return $this->admin;
+    }
+    public function isBanned(){
+        return $this->banned;
     }
 
     public function getPassword(): string

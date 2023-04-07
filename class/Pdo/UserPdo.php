@@ -7,8 +7,8 @@ use App\Parent\PdoDb;
 class UserPdo extends PdoDb
 {
     private const TABLE_NAME = 'users';
-    private const UPDATE_QUERY = "UPDATE users SET username = :username, email = :email, password = :password, admin = :admin WHERE id = :id";
-    private const INSERT_QUERY = "INSERT INTO users (username,email,password,admin) VALUES (:username,:email,:password,:admin)";
+    private const UPDATE_QUERY = "UPDATE users SET username = :username, email = :email, password = :password, admin = :admin, banned = :banned WHERE id = :id";
+    private const INSERT_QUERY = "INSERT INTO users (username,email,password,admin,banned) VALUES (:username,:email,:password,:admin,:banned)";
 
     public function __construct()
     {
@@ -19,14 +19,15 @@ class UserPdo extends PdoDb
     public function rowToObject(array|bool $row): User|bool
     {
         if (!$row) {
-            return $row;
+            return false;
         } else
             return new User(
                 $row['username'],
                 $row['email'],
                 $row['password'],
-                $row['admin'],
-                $row['id']
+                (bool) $row['admin'],
+                $row['id'],
+                (bool) $row['banned'] ?? false
             );
     }
 
@@ -36,7 +37,8 @@ class UserPdo extends PdoDb
             'username' => $item->getUsername(),
             'email' => $item->getEmail(),
             'password' => $item->getPassword(),
-            'admin' => $item->isAdmin(),
+            'admin' => (bool) $item->isAdmin(),
+            'banned' => (bool) $item->isBanned()
         ];
     }
 
