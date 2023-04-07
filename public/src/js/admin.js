@@ -217,7 +217,6 @@ async function postData(myArray, type) {
   } catch (err) {
     console.error("POST request failed:", err);
   }
-
 }
 
 function eventListen(btn, form) {

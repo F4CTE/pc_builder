@@ -56,7 +56,7 @@ require_once __DIR__ . '/public/templates/head.php';
                                 <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Rams-tab" data-bs-toggle="pill" data-bs-target="#pills-Rams" type="button" role="tab" aria-controls="pills-Rams" aria-selected="false">Rams</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this.inneHTML)" class="nav-link text-nowrap" id="pills-Ssds-tab" data-bs-toggle="pill" data-bs-target="#pills-Ssds" type="button" role="tab" aria-controls="pills-Ssds" aria-selected="false">Ssds</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Ssds-tab" data-bs-toggle="pill" data-bs-target="#pills-Ssds" type="button" role="tab" aria-controls="pills-Ssds" aria-selected="false">Ssds</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
@@ -93,8 +93,6 @@ require_once __DIR__ . '/public/templates/head.php';
                 </div>
             </div>
         </div>
-
-
     </main>
     <?php require_once __DIR__ . '/public/templates/footer.php'; ?>
 </body>
