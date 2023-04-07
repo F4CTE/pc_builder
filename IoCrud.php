@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['request']) && $_SESSION
     $rawData = file_get_contents("php://input");
     $jsonData = json_decode($rawData, true);
 
-    var_dump($jsonData['entity']);
     $entity = getEntity($jsonData['entityType'], $jsonData['entity']);
     $response = [];
     if ($jsonData['operationType'] === 'update' || $jsonData['operationType'] === 'create') {

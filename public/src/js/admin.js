@@ -221,7 +221,6 @@ function generateForm(content) {
 }
 
 async function postData(myArray) {
-  console.log(myArray);
   try {
     const response = await fetch(window.location.origin + "/IoCrud.php", {
       method: "POST",
@@ -238,9 +237,6 @@ async function postData(myArray) {
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
     }
-    await response.text(response).then((text) => {
-      console.log(text);
-    });
     const data = await response.json();
     console.log("POST request:", data);
   } catch (err) {
