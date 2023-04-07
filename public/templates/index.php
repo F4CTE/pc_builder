@@ -1,14 +1,7 @@
 <?php
 
-use App\Hdd\HddPdo;
-use App\Mb\MbPdo;
-use App\Psu\PsuPdo;
-use App\Ram\RamPdo;
-use App\Ssd\SsdPdo;
-use App\User\UserPdo;
-
 require_once __DIR__ . '/../../vendor/autoload.php';
-
+session_start();
 
 
 $pageTitle = "Home";

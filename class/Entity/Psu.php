@@ -95,7 +95,8 @@ class Psu extends Part implements JsonSerializable
     {
         return $this->power;
     }
-    public function setName(string $name): void{
+    public function setName(string $name): void
+    {
         $this->name = $name;
     }
 }

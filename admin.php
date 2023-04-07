@@ -26,37 +26,37 @@ require_once __DIR__ . '/public/templates/head.php';
                     <div class="accordion-body">
                         <ul class="nav nav-pills my-3 flex-row justify-content-around" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Users-tab" data-bs-toggle="pill" data-bs-target="#pills-Users" type="button" role="tab" aria-controls="pills-Users" aria-selected="true">Users</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Users-tab" data-bs-toggle="pill" data-bs-target="#pills-Users" type="button" role="tab" aria-controls="pills-Users" aria-selected="true">Users</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Builds-tab" data-bs-toggle="pill" data-bs-target="#pills-Builds" type="button" role="tab" aria-controls="pills-Builds" aria-selected="false">Builds</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Builds-tab" data-bs-toggle="pill" data-bs-target="#pills-Builds" type="button" role="tab" aria-controls="pills-Builds" aria-selected="false">Builds</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Chassis-tab" data-bs-toggle="pill" data-bs-target="#pills-Chassis" type="button" role="tab" aria-controls="pills-Chassis" aria-selected="false">Chassis</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Chassis-tab" data-bs-toggle="pill" data-bs-target="#pills-Chassis" type="button" role="tab" aria-controls="pills-Chassis" aria-selected="false">Chassis</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-CpuCoolres-tab" data-bs-toggle="pill" data-bs-target="#pills-CpuCoolers" type="button" role="tab" aria-controls="pills-CpuCoolers" aria-selected="false">Cpu Coolers</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-CpuCoolres-tab" data-bs-toggle="pill" data-bs-target="#pills-CpuCoolers" type="button" role="tab" aria-controls="pills-CpuCoolers" aria-selected="false">Cpu Coolers</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Cpus-tab" data-bs-toggle="pill" data-bs-target="#pills-Cpus" type="button" role="tab" aria-controls="pills-Cpus" aria-selected="false">Cpus</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Cpus-tab" data-bs-toggle="pill" data-bs-target="#pills-Cpus" type="button" role="tab" aria-controls="pills-Cpus" aria-selected="false">Cpus</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Gpus-tab" data-bs-toggle="pill" data-bs-target="#pills-Gpus" type="button" role="tab" aria-controls="pills-Gpus" aria-selected="false">Gpus</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Gpus-tab" data-bs-toggle="pill" data-bs-target="#pills-Gpus" type="button" role="tab" aria-controls="pills-Gpus" aria-selected="false">Gpus</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Hdds-tab" data-bs-toggle="pill" data-bs-target="#pills-Hdds" type="button" role="tab" aria-controls="pills-Hdds" aria-selected="false">Hdds</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Hdds-tab" data-bs-toggle="pill" data-bs-target="#pills-Hdds" type="button" role="tab" aria-controls="pills-Hdds" aria-selected="false">Hdds</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-motherboards-tab" data-bs-toggle="pill" data-bs-target="#pills-Motherboards" type="button" role="tab" aria-controls="pills-Motherboards" aria-selected="false">Motherboards</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-motherboards-tab" data-bs-toggle="pill" data-bs-target="#pills-Motherboards" type="button" role="tab" aria-controls="pills-Motherboards" aria-selected="false">Motherboards</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Psus-tab" data-bs-toggle="pill" data-bs-target="#pills-Psus" type="button" role="tab" aria-controls="pills-Psus" aria-selected="false">Psus</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Psus-tab" data-bs-toggle="pill" data-bs-target="#pills-Psus" type="button" role="tab" aria-controls="pills-Psus" aria-selected="false">Psus</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Rams-tab" data-bs-toggle="pill" data-bs-target="#pills-Rams" type="button" role="tab" aria-controls="pills-Rams" aria-selected="false">Rams</button>
+                                <button onclick="getElements(this.innerHTML)" class="nav-link text-nowrap" id="pills-Rams-tab" data-bs-toggle="pill" data-bs-target="#pills-Rams" type="button" role="tab" aria-controls="pills-Rams" aria-selected="false">Rams</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="getElements(this)" class="nav-link text-nowrap" id="pills-Ssds-tab" data-bs-toggle="pill" data-bs-target="#pills-Ssds" type="button" role="tab" aria-controls="pills-Ssds" aria-selected="false">Ssds</button>
+                                <button onclick="getElements(this.inneHTML)" class="nav-link text-nowrap" id="pills-Ssds-tab" data-bs-toggle="pill" data-bs-target="#pills-Ssds" type="button" role="tab" aria-controls="pills-Ssds" aria-selected="false">Ssds</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">

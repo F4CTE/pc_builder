@@ -78,7 +78,7 @@ class MbPdo extends PartPdo
                 $row['chipset'],
                 $row['form'],
                 $row['memoryType'],
-                is_array($row['ports'])? $row['ports'] : json_decode($row['ports'], true),
+                is_array($row['ports']) ? $row['ports'] : json_decode($row['ports'], true),
                 $row['memoryCapacity'],
                 $row['mpn'],
                 $row['ean'],

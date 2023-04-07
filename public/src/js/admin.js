@@ -1,25 +1,25 @@
 elements = [];
 openTab = "";
-async function getElements(btn) {
-  openTab = btn.innerHTML;
-  displayLoading(btn.innerHTML);
+async function getElements(btn = openTab) {
+  openTab = btn;
+  displayLoading(btn);
   try {
     const response = await fetch(
       window.location.origin +
         "/IoCrud.php?request=" +
-        btn.innerHTML.toLowerCase().replace(/\s+/g, "")
+        btn.toLowerCase().replace(/\s+/g, "")
     );
     elements = await response.json();
   } catch (err) {
     console.log("Une erreur est survenue");
   }
   console.log(elements);
-  displayElements(btn.innerHTML, elements);
+  displayElements(btn, elements);
 }
 
 function displayLoading(type) {
   block = document.getElementById("pills-" + type.replace(/\s+/g, ""));
-  block.innerHTML = `<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
+  block = `<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 }
 
 function displayElements(type, content) {
@@ -91,11 +91,11 @@ function generateModal(element) {
   modalBody.innerHTML = "";
   modalFooter.innerHTML = "";
 
-  const { form, submitButton, deleteButton} = generateForm(
+  const { form, submitButton, deleteButton } = generateForm(
     elements.find((x) => x["id"] == element.firstElementChild.textContent)
   );
   modalBody.appendChild(form);
-  modalFooter.appendChild(deleteButton)
+  modalFooter.appendChild(deleteButton);
   modalFooter.appendChild(submitButton);
 }
 
@@ -189,10 +189,10 @@ function generateForm(content) {
   submitButton.classList.add("btn", "btn-primary");
   submitButton.type = "button";
 
-  eventListen(submitButton ,form);
-  eventListen(deleteButton , form);
+  eventListen(submitButton, form);
+  eventListen(deleteButton, form);
 
-  return { form, submitButton , deleteButton};
+  return { form, submitButton, deleteButton };
 }
 
 async function postData(myArray, type) {
@@ -217,10 +217,10 @@ async function postData(myArray, type) {
   } catch (err) {
     console.error("POST request failed:", err);
   }
+
 }
 
-
-function eventListen(btn , form){
+function eventListen(btn, form) {
   btn.addEventListener("click", function (event) {
     event.preventDefault();
     const formData = new FormData(form);
@@ -252,6 +252,7 @@ function eventListen(btn , form){
       updatedContent["banned"] = form.banned.checked;
     }
 
-    postData(JSON.stringify(updatedContent),btn.textContent);
+    postData(JSON.stringify(updatedContent), btn.textContent);
+    getElements();
   });
 }
