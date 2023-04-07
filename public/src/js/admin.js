@@ -91,10 +91,11 @@ function generateModal(element) {
   modalBody.innerHTML = "";
   modalFooter.innerHTML = "";
 
-  const { form, submitButton } = generateForm(
+  const { form, submitButton, deleteButton} = generateForm(
     elements.find((x) => x["id"] == element.firstElementChild.textContent)
   );
   modalBody.appendChild(form);
+  modalFooter.appendChild(deleteButton)
   modalFooter.appendChild(submitButton);
 }
 
@@ -178,12 +179,49 @@ function generateForm(content) {
     }
   }
 
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "delete";
+  deleteButton.classList.add("btn", "btn-danger");
+  deleteButton.type = "button";
+
   const submitButton = document.createElement("button");
-  submitButton.textContent = "Submit";
+  submitButton.textContent = "save";
   submitButton.classList.add("btn", "btn-primary");
   submitButton.type = "button";
 
-  submitButton.addEventListener("click", function (event) {
+  eventListen(submitButton ,form);
+  eventListen(deleteButton , form);
+
+  return { form, submitButton , deleteButton};
+}
+
+async function postData(myArray, type) {
+  try {
+    const response = await fetch(window.location.origin + "/IoCrud.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        operationType: type,
+        entityType: openTab.toLowerCase().replace(/\s+/g, ""),
+        entity: myArray,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+    const data = await response.json();
+    console.log("POST request:", data);
+  } catch (err) {
+    console.error("POST request failed:", err);
+  }
+}
+
+
+function eventListen(btn , form){
+  btn.addEventListener("click", function (event) {
     event.preventDefault();
     const formData = new FormData(form);
     const updatedContent = {};
@@ -214,32 +252,6 @@ function generateForm(content) {
       updatedContent["banned"] = form.banned.checked;
     }
 
-    postData(JSON.stringify(updatedContent));
+    postData(JSON.stringify(updatedContent),btn.textContent);
   });
-
-  return { form, submitButton };
-}
-
-async function postData(myArray) {
-  try {
-    const response = await fetch(window.location.origin + "/IoCrud.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        operationType: "update",
-        entityType: openTab.toLowerCase().replace(/\s+/g, ""),
-        entity: myArray,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
-    const data = await response.json();
-    console.log("POST request:", data);
-  } catch (err) {
-    console.error("POST request failed:", err);
-  }
 }

@@ -11,26 +11,28 @@
 
                     use App\User\UserPdo;
 
-                    if (isset($_SESSION['user']) && $_SESSION['isAdmin']) : ?>
+                    if (isset($_SESSION['user']) && $_SESSION['isAdmin'] && $pageTitle !== 'Admin Panel') : ?>
                         <li class="nav-item">
                             <a class="nav-link" href="admin.php">Admin</a>
                         </li>
                     <?php endif; ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="build.php">Build</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="parts.php">Parts</a>
-                    </li>
-
-                    <?php if ((basename($_SERVER['PHP_SELF']) !== 'register.php' && !isset($_SESSION['user']))) : ?>
+                    <?php if ($pageTitle !== 'Build') : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="build.php">Build</a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if ($pageTitle !== 'Parts') : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="parts.php">Parts</a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if ($pageTitle !== 'Register' && !isset($_SESSION['user'])) : ?>
                         <li class="nav-item">
                             <a class="nav-link" href="register.php">register</a>
                         </li>
                     <?php endif; ?>
 
-                    <?php if ((basename($_SERVER['PHP_SELF']) !== 'login.php' && !isset($_SESSION['user']))) : ?>
+                    <?php if ($pageTitle !== 'Login' && !isset($_SESSION['user'])) : ?>
                         <li class="nav-item">
                             <a class="nav-link" href="login.php">login</a>
                         </li>

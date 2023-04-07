@@ -30,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$user) {
         $_SESSION['error'] = "The email/username you entered does not exist.";
         loginAtempsIncrement();
-    } else if ($user->isPasswordCorrect($_POST['password'])) {
+    } else if($user->isBanned()){
+        $_SESSION['error'] = "You have been banned";
+    }else if ($user->isPasswordCorrect($_POST['password'])) {
         unset($_SESSION['login_attempts'], $_SESSION['last_login_attempt']);
         $_SESSION['user'] = $user->getId();
         $_SESSION['isAdmin'] = $user->isAdmin();

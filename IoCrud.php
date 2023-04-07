@@ -1,28 +1,17 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\Build\Build;
 use App\Build\BuildPdo;
-use App\Chassis\Chassis;
 use App\Chassis\ChassisPdo;
-use App\Cpu\Cpu;
 use App\Cpu\CpuPdo;
-use App\CpuCooler\CpuCooler;
 use App\CpuCooler\CpuCoolerPdo;
-use App\Gpu\Gpu;
 use App\Gpu\GpuPdo;
-use App\Hdd\Hdd;
 use App\Hdd\HddPdo;
-use App\Mb\Mb;
 use App\Mb\MbPdo;
 use App\Parent\PdoDb;
-use App\Psu\Psu;
 use App\Psu\PsuPdo;
-use App\Ram\Ram;
 use App\Ram\RamPdo;
-use App\Ssd\Ssd;
 use App\Ssd\SsdPdo;
-use App\User\User;
 use App\User\UserPdo;
 
 
@@ -47,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['request']) && $_SESSION
 
     $entity = getEntity($jsonData['entityType'], $jsonData['entity']);
     $response = [];
-    if ($jsonData['operationType'] === 'update' || $jsonData['operationType'] === 'create') {
+    if ($jsonData['operationType'] === 'save') {
         $result = $entity->save();
         $response['status'] = $result ? 'success' : 'error';
         $response['operation'] = $jsonData['operationType'];
